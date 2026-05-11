@@ -7,6 +7,7 @@ class ScheduleItem {
   final int startHour;
   final int endHour;
   final String room;
+  final String professor;
   final int color;        // AppColors.timetableColors 인덱스 (6으로 나눈 나머지로 순환)
 
   const ScheduleItem({
@@ -15,6 +16,7 @@ class ScheduleItem {
     required this.startHour,
     required this.endHour,
     required this.room,
+    required this.professor,
     required this.color,
   });
 }

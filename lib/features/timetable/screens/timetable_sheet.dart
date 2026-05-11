@@ -7,6 +7,7 @@ import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
 import 'package:university_portal_flutter/data/mock/mock_data.dart';
 import 'package:university_portal_flutter/data/models/schedule_item.dart';
+import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 
 class TimetableSheet extends StatelessWidget {
   const TimetableSheet({super.key});
@@ -22,18 +23,9 @@ class TimetableSheet extends StatelessWidget {
         return Column(
           children: [
             // 드래그 핸들
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-              child: Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: AppColors.divider,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: AppSpacing.sm),
+              child: Center(child: AppDragHandle()),
             ),
 
             // 헤더
@@ -86,6 +78,32 @@ class TimetableSheet extends StatelessWidget {
       },
     );
   }
+}
+
+// 과목 블록 탭 시 상세 다이얼로그 표시
+void _showCourseDialog(BuildContext context, ScheduleItem item) {
+  final timeText = '${item.day}요일  ${item.startHour}:00 ~ ${item.endHour}:00';
+
+  showDialog<void>(
+    context: context,
+    builder: (_) => AlertDialog(
+      title: Text(item.subject, style: AppTextStyles.heading2),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _DialogRow(label: '강의실', value: item.room),
+          _DialogRow(label: '교수명', value: item.professor),
+          _DialogRow(label: '시간',   value: timeText),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('닫기'),
+        ),
+      ],
+    ),
+  );
 }
 
 class _TimetableGrid extends StatelessWidget {
@@ -169,13 +187,7 @@ class _TimetableGrid extends StatelessWidget {
                   width: colWidth - 4,
                   height: height,
                   child: GestureDetector(
-                    onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('${item.subject}  |  ${item.room}'),
-                        duration: const Duration(seconds: 2),
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    ),
+                    onTap: () => _showCourseDialog(context, item),
                     child: Container(
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
@@ -215,6 +227,36 @@ class _TimetableGrid extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+// 다이얼로그 내 레이블-값 한 행
+class _DialogRow extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _DialogRow({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 52,
+            child: Text(
+              label,
+              style: AppTextStyles.label.copyWith(color: AppColors.textSecondary),
+            ),
+          ),
+          Expanded(
+            child: Text(value, style: AppTextStyles.body2),
+          ),
+        ],
+      ),
     );
   }
 }

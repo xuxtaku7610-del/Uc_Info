@@ -30,11 +30,11 @@ const mockUser3 = User(
 
 // 주간 시간표 (2026학년도 1학기)
 final mockSchedule = [
-  const ScheduleItem(subject: '데이터베이스', day: '월', startHour: 9,  endHour: 11, room: '공학관 301', color: 0),
-  const ScheduleItem(subject: '알고리즘',    day: '화', startHour: 10, endHour: 12, room: '공학관 205', color: 1),
-  const ScheduleItem(subject: '모바일프로그래밍', day: '수', startHour: 13, endHour: 15, room: '공학관 402', color: 2),
-  const ScheduleItem(subject: '운영체제',    day: '목', startHour: 9,  endHour: 11, room: '공학관 301', color: 3),
-  const ScheduleItem(subject: '캡스톤디자인', day: '금', startHour: 14, endHour: 17, room: '공학관 501', color: 4),
+  const ScheduleItem(subject: '데이터베이스',    day: '월', startHour: 9,  endHour: 11, room: '공학관 301', professor: '김영수', color: 0),
+  const ScheduleItem(subject: '알고리즘',        day: '화', startHour: 10, endHour: 12, room: '공학관 205', professor: '이지훈', color: 1),
+  const ScheduleItem(subject: '모바일프로그래밍', day: '수', startHour: 13, endHour: 15, room: '공학관 402', professor: '박정민', color: 2),
+  const ScheduleItem(subject: '운영체제',        day: '목', startHour: 9,  endHour: 11, room: '공학관 301', professor: '최혁진', color: 3),
+  const ScheduleItem(subject: '캡스톤디자인',    day: '금', startHour: 14, endHour: 17, room: '공학관 501', professor: '정서연', color: 4),
 ];
 
 // 공지사항 (탭별 카테고리: notice / dept_news / dept_notice / scholarship)

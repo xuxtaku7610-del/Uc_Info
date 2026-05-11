@@ -8,6 +8,7 @@ import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
 import 'package:university_portal_flutter/data/mock/mock_data.dart';
 import 'package:university_portal_flutter/features/home/providers/home_provider.dart';
+import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 
 const _tabs = ['공지사항', '학과소식', '학과공지', '장학·취업'];
 const _categories = ['notice', 'dept_news', 'dept_notice', 'scholarship'];
@@ -22,18 +23,7 @@ class NoticeSection extends ConsumerWidget {
     final filtered =
         mockNotices.where((n) => n.category == category).toList();
 
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -80,10 +70,10 @@ class NoticeSection extends ConsumerWidget {
           // 공지 리스트
           if (filtered.isEmpty)
             Padding(
-              padding: const EdgeInsets.all(AppSpacing.lg),
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
               child: Center(
                 child: Text(
-                  '등록된 공지사항이 없습니다.',
+                  '공지사항이 없습니다',
                   style: AppTextStyles.body2
                       .copyWith(color: AppColors.textHint),
                 ),

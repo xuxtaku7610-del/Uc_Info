@@ -4,6 +4,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:university_portal_flutter/data/repositories/auth_repository.dart';
+import 'package:university_portal_flutter/features/auth/providers/auth_session_provider.dart';
 
 class AuthState {
   final bool isLoading;
@@ -37,11 +38,13 @@ class AuthState {
 // 학번 인증 상태를 관리하는 StateNotifier.
 // 인증 성공 시 true 반환, 실패(유효성 오류·Mock 불일치) 시 false 반환.
 class AuthNotifier extends StateNotifier<AuthState> {
-  AuthNotifier({required AuthRepository repository})
+  AuthNotifier({required AuthRepository repository, required Ref ref})
       : _repository = repository,
+        _ref = ref,
         super(const AuthState());
 
   final AuthRepository _repository;
+  final Ref _ref;
 
   Future<bool> verifyStudent({
     required String name,
@@ -71,6 +74,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
         department: department.trim(),
         studentId: studentId.trim(),
       );
+      // 인증 성공 → SharedPreferences에 로그인 상태 저장
+      await _ref.read(authSessionProvider.notifier).login();
       state = state.copyWith(isLoading: false);
       return true;
     } catch (_) {
@@ -86,5 +91,5 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   // TODO(Phase 2): MockAuthRepository → ApiAuthRepository로 교체
-  return AuthNotifier(repository: MockAuthRepository());
+  return AuthNotifier(repository: MockAuthRepository(), ref: ref);
 });

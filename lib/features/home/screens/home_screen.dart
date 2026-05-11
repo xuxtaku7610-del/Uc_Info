@@ -11,6 +11,7 @@ import 'package:university_portal_flutter/features/home/widgets/quick_action_sec
 import 'package:university_portal_flutter/features/home/widgets/shortcut_grid.dart';
 import 'package:university_portal_flutter/features/home/widgets/student_banner.dart';
 import 'package:university_portal_flutter/features/settings/screens/settings_sheet.dart';
+import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 import 'package:university_portal_flutter/shared/widgets/uc_header.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -22,15 +23,10 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       appBar: UCHeader(
         showSettings: true,
-        onSettingsTap: () => showModalBottomSheet<void>(
-          context: context,
+        onSettingsTap: () => showAppBottomSheet<void>(
+          context,
+          (_) => const SettingsSheet(),
           isScrollControlled: true,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(AppSpacing.radiusLg),
-            ),
-          ),
-          builder: (_) => const SettingsSheet(),
         ),
       ),
       body: SafeArea(

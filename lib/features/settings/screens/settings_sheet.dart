@@ -7,6 +7,7 @@ import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
 import 'package:university_portal_flutter/features/settings/providers/settings_provider.dart';
+import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 
 class SettingsSheet extends ConsumerWidget {
   const SettingsSheet({super.key});
@@ -28,16 +29,7 @@ class SettingsSheet extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 드래그 핸들
-          Center(
-            child: Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: AppColors.divider,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          ),
+          const Center(child: AppDragHandle()),
           const SizedBox(height: AppSpacing.md),
 
           Text('설정', style: AppTextStyles.heading2),

@@ -7,6 +7,7 @@ import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
 import 'package:university_portal_flutter/data/models/user.dart';
+import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 
 class StudentBanner extends StatelessWidget {
   final User user;
@@ -78,14 +79,9 @@ class StudentBanner extends StatelessWidget {
   }
 
   void _showStudentId(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppSpacing.radiusLg),
-        ),
-      ),
-      builder: (_) => _StudentIdSheet(user: user),
+    showAppBottomSheet<void>(
+      context,
+      (_) => _StudentIdSheet(user: user),
     );
   }
 }
@@ -108,14 +104,7 @@ class _StudentIdSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // 드래그 핸들
-          Container(
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: AppColors.divider,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
+          const AppDragHandle(),
           const SizedBox(height: AppSpacing.md),
           Text('모바일 학생증', style: AppTextStyles.heading2),
           const SizedBox(height: AppSpacing.md),

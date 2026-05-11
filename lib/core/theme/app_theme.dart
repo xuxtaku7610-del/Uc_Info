@@ -12,6 +12,8 @@ class AppTheme {
   static const Color textPrimary = Color(0xFF333333);
   static const Color textSecondary = Color(0xFF666666); 
   
+  static const Color _darkBackground = Color(0xFF121212);
+
   static ThemeData light() {
     return ThemeData(
       useMaterial3: true,
@@ -24,6 +26,23 @@ class AppTheme {
       ),
       // [도전 과제: 텍스트 테마 추가]
       // 여기에 textTheme: TextTheme(...) 을 추가하여 기본 폰트나 글씨 크기를 세팅해 보세요.
+    );
+  }
+
+  static ThemeData dark() {
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: _darkBackground,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: brandBlue,
+        brightness: Brightness.dark,
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: _darkBackground,
+        elevation: 0,
+        centerTitle: false,
+      ),
     );
   }
 }

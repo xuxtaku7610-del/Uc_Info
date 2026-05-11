@@ -7,6 +7,7 @@ import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
 import 'package:university_portal_flutter/features/meal/screens/meal_sheet.dart';
 import 'package:university_portal_flutter/features/timetable/screens/timetable_sheet.dart';
+import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 
 class QuickActionSection extends StatelessWidget {
   const QuickActionSection({super.key});
@@ -20,15 +21,10 @@ class QuickActionSection extends StatelessWidget {
             title: '시간표',
             subtitle: '이번 주 수업 확인',
             icon: Icons.calendar_today_outlined,
-            onTap: () => showModalBottomSheet<void>(
-              context: context,
+            onTap: () => showAppBottomSheet<void>(
+              context,
+              (_) => const TimetableSheet(),
               isScrollControlled: true,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(AppSpacing.radiusLg),
-                ),
-              ),
-              builder: (_) => const TimetableSheet(),
             ),
           ),
         ),
@@ -38,15 +34,10 @@ class QuickActionSection extends StatelessWidget {
             title: '식단표',
             subtitle: '오늘 메뉴 확인',
             icon: Icons.restaurant_outlined,
-            onTap: () => showModalBottomSheet<void>(
-              context: context,
+            onTap: () => showAppBottomSheet<void>(
+              context,
+              (_) => const MealSheet(),
               isScrollControlled: true,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(AppSpacing.radiusLg),
-                ),
-              ),
-              builder: (_) => const MealSheet(),
             ),
           ),
         ),
@@ -73,20 +64,9 @@ class _QuickCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-      child: Container(
+      child: AppCard(
         height: 110,
         padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -47,8 +47,11 @@ class AppTextField extends StatelessWidget {
         const SizedBox(height: 6),
         TextField(
           controller: controller,
-          keyboardType: keyboardType,
+          // null이면 TextInputType.text로 명시 — 일부 Android 키보드가 null일 때 한/영 전환키를 숨김
+          keyboardType: keyboardType ?? TextInputType.text,
           textInputAction: textInputAction,
+          // none으로 설정 — 한글 조합 중 Flutter가 대문자 변환을 시도하면 IME가 끊기는 문제 방지
+          textCapitalization: TextCapitalization.none,
           inputFormatters: inputFormatters,
           decoration: InputDecoration(
             hintText: placeholder,
