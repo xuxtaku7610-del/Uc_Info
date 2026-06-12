@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
@@ -59,7 +60,7 @@ class MypageScreen extends ConsumerWidget {
                     value: settings.notificationsEnabled,
                     onChanged: (v) =>
                         ref.read(settingsProvider.notifier).toggleNotifications(v),
-                    activeColor: AppColors.primary,
+                    activeThumbColor: AppColors.primary,
                   ),
                 ),
                 const _ItemDivider(),
@@ -81,7 +82,7 @@ class MypageScreen extends ConsumerWidget {
                     value: settings.darkModeEnabled,
                     onChanged: (v) =>
                         ref.read(settingsProvider.notifier).toggleDarkMode(v),
-                    activeColor: AppColors.primary,
+                    activeThumbColor: AppColors.primary,
                   ),
                 ),
               ]),
@@ -93,6 +94,12 @@ class MypageScreen extends ConsumerWidget {
                   icon: Icons.campaign_outlined,
                   label: '공지사항',
                   onTap: () {},
+                ),
+                const _ItemDivider(),
+                _MenuItem(
+                  icon: Icons.translate,
+                  label: '공지사항 번역',
+                  onTap: () => context.push('/notice/translation'),
                 ),
                 const _ItemDivider(),
                 _MenuItem(
@@ -300,7 +307,7 @@ class _StudentCard extends StatelessWidget {
         border: Border.all(color: const Color(0xFFEAECF0), width: 0.5),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF2F5BE8).withOpacity(0.06),
+            color: const Color(0xFF2F5BE8).withValues(alpha: 0.06),
             blurRadius: 16,
             offset: const Offset(0, 2),
           ),

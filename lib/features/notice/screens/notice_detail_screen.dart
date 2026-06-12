@@ -89,6 +89,25 @@ class NoticeDetailScreen extends StatelessWidget {
                 color: AppColors.textPrimary,
               ),
             ),
+            const SizedBox(height: AppSpacing.lg),
+
+            // 영어 번역 화면 진입 버튼 (외국인 유학생을 위한 한→영 번역)
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () => context.push('/notice/translation'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.primary,
+                  side: const BorderSide(color: AppColors.primary),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+                ),
+                icon: const Icon(Icons.translate),
+                label: const Text('Translate to English 🌐', style: AppTextStyles.buttonText),
+              ),
+            ),
           ],
         ),
       ),
