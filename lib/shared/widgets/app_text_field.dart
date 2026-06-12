@@ -52,6 +52,9 @@ class AppTextField extends StatelessWidget {
           textInputAction: textInputAction,
           // none으로 설정 — 한글 조합 중 Flutter가 대문자 변환을 시도하면 IME가 끊기는 문제 방지
           textCapitalization: TextCapitalization.none,
+          // false로 설정 — Android IME에 TYPE_TEXT_FLAG_AUTO_CORRECT 플래그 전달을 차단.
+          // 이 플래그가 활성화되면 GBoard·삼성 키보드 등 일부 한글 IME가 영어 모드로 고정됨.
+          autocorrect: false,
           inputFormatters: inputFormatters,
           decoration: InputDecoration(
             hintText: placeholder,

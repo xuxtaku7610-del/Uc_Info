@@ -40,7 +40,7 @@ class ShortcutGrid extends StatelessWidget {
               crossAxisCount: 4,
               crossAxisSpacing: AppSpacing.sm,
               mainAxisSpacing: AppSpacing.sm,
-              childAspectRatio: 0.9,
+              childAspectRatio: 0.75, // 0.9 → 0.75: 셀 높이 증가
             ),
             itemBuilder: (context, index) =>
                 _ShortcutButton(item: _items[index]),
@@ -66,9 +66,9 @@ class _ShortcutButton extends StatelessWidget {
 
   Future<void> _handleTap(BuildContext context) async {
     if (item.url != null) {
-      // url이 있는 항목: 외부 브라우저로 열기
+      // url이 있는 항목: 앱 내 웹뷰로 열기 (에뮬레이터에서 Chrome 로그인 불필요)
       final uri = Uri.parse(item.url!);
-      final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      final opened = await launchUrl(uri, mode: LaunchMode.inAppWebView);
       if (!opened && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -98,12 +98,12 @@ class _ShortcutButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(AppSpacing.sm),
+            padding: const EdgeInsets.all(AppSpacing.sm + 4), // 8 → 12
             decoration: BoxDecoration(
               color: AppColors.primaryLight,
               borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
             ),
-            child: Icon(item.icon, color: AppColors.primary, size: 22),
+            child: Icon(item.icon, color: AppColors.primary, size: 26), // 22 → 26
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
@@ -113,7 +113,7 @@ class _ShortcutButton extends StatelessWidget {
             textAlign: TextAlign.center,
             style: AppTextStyles.caption.copyWith(
               color: AppColors.textPrimary,
-              fontSize: 11,
+              fontSize: 12, // 11 → 12
             ),
           ),
         ],

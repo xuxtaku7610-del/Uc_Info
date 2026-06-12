@@ -6,7 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:university_portal_flutter/features/auth/providers/auth_session_provider.dart';
 import 'package:university_portal_flutter/features/auth/screens/auth_screen.dart';
+import 'package:university_portal_flutter/features/grade_simulator/screens/grade_simulator_screen.dart';
 import 'package:university_portal_flutter/features/home/screens/home_screen.dart';
+import 'package:university_portal_flutter/features/mypage/screens/mypage_screen.dart';
+import 'package:university_portal_flutter/features/notice/screens/notice_detail_screen.dart';
 
 // GoRouter는 Listenable만 수신 가능 → Riverpod 상태 변화를 ChangeNotifier로 브릿지
 class _RouterNotifier extends ChangeNotifier {
@@ -41,6 +44,15 @@ final routerProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(path: '/auth', builder: (_, _) => const AuthScreen()),
       GoRoute(path: '/home', builder: (_, _) => const HomeScreen()),
+      GoRoute(path: '/mypage', builder: (_, _) => const MypageScreen()),
+      GoRoute(path: '/grade-simulator', builder: (_, _) => const GradeSimulatorScreen()),
+      GoRoute(
+        path: '/notice/:id',
+        builder: (_, state) {
+          final id = int.parse(state.pathParameters['id']!);
+          return NoticeDetailScreen(noticeIndex: id);
+        },
+      ),
     ],
   );
 });
