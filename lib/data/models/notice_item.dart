@@ -2,15 +2,48 @@
 // 역할: 공지사항 데이터 모델.
 
 class NoticeItem {
+  final int id;
   final String title;
-  final String date;      // '04.28' 형식
-  final String category;  // 'notice' | 'dept_news' | 'dept_notice' | 'scholarship'
-  final String content;   // Phase 2에서 API 본문으로 대체
+  final String content;
+  final String category; // 'notice', 'dept_news', 'dept_notice', 'scholarship'
+  final String date;     // 'MM.dd' 형식 (예: '09.10')
+  final bool isRead;
 
-  const NoticeItem({
+  NoticeItem({
+    required this.id,
     required this.title,
-    required this.date,
+    required this.content,
     required this.category,
-    this.content = '공지사항 본문 내용입니다. Phase 2에서 API로 대체됩니다.',
+    required this.date,
+    this.isRead = false,
   });
+
+  factory NoticeItem.fromJson(Map<String, dynamic> json) {
+    return NoticeItem(
+      id: json['id'] ?? 0,
+      title: json['title'] ?? '',
+      content: json['content'] ?? '',
+      category: json['category'] ?? 'notice',
+      date: json['date'] ?? '',
+      isRead: json['isRead'] ?? false,
+    );
+  }
+
+  NoticeItem copyWith({
+    int? id,
+    String? title,
+    String? content,
+    String? category,
+    String? date,
+    bool? isRead,
+  }) {
+    return NoticeItem(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      category: category ?? this.category,
+      date: date ?? this.date,
+      isRead: isRead ?? this.isRead,
+    );
+  }
 }

@@ -55,7 +55,9 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/notice/:id',
         builder: (_, state) {
           final id = int.parse(state.pathParameters['id']!);
-          return NoticeDetailScreen(noticeIndex: id);
+          // 만약 state.extra로 NoticeItem이 넘어온다면 사용 가능
+          final notice = state.extra as NoticeItem?;
+          return NoticeDetailScreen(noticeId: id, notice: notice);
         },
       ),
     ],

@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
-import 'package:university_portal_flutter/data/mock/mock_data.dart';
+import 'package:university_portal_flutter/data/models/user.dart';
 import 'package:university_portal_flutter/features/auth/providers/auth_session_provider.dart';
 import 'package:university_portal_flutter/features/settings/providers/settings_provider.dart';
 
@@ -17,6 +17,8 @@ class MypageScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingsProvider);
+    // TODO: 실제 사용자 정보 Provider에서 가져오도록 수정 필요
+    final user = User(studentId: '-', name: '사용자', department: '-', year: 1);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -26,7 +28,7 @@ class MypageScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // ── 1. 학생증 카드
-              const _StudentCard(),
+              _StudentCard(user: user),
 
               // ── 2. 학사 정보
               const _SectionHeader(title: '학사 정보'),
@@ -292,9 +294,10 @@ class _ItemDivider extends StatelessWidget {
   }
 }
 
-// ── 학생증 카드 (Phase 1: mockUser 고정)
+// ── 학생증 카드 (Phase 1: mockUser 제거)
 class _StudentCard extends StatelessWidget {
-  const _StudentCard();
+  final User user;
+  const _StudentCard({required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -332,7 +335,7 @@ class _StudentCard extends StatelessWidget {
                 ),
                 alignment: Alignment.center,
                 child: Text(
-                  mockUser.name.substring(0, 1),
+                  user.name.isNotEmpty ? user.name.substring(0, 1) : '',
                   style: AppTextStyles.heading3.copyWith(color: Colors.white),
                 ),
               ),
@@ -340,17 +343,17 @@ class _StudentCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(mockUser.name, style: AppTextStyles.heading2),
+                  Text(user.name, style: AppTextStyles.heading2),
                   const SizedBox(height: 2),
                   Text(
-                    '${mockUser.department} ${mockUser.year}학년',
+                    '${user.department} ${user.year}학년',
                     style: AppTextStyles.body2.copyWith(
                       color: AppColors.textSecondary,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    mockUser.studentId,
+                    user.studentId,
                     style: AppTextStyles.caption.copyWith(
                       color: AppColors.textHint,
                     ),

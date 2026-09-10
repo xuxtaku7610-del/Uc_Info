@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
-import 'package:university_portal_flutter/data/mock/mock_data.dart';
 import 'package:university_portal_flutter/features/home/providers/home_provider.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 
@@ -21,8 +20,9 @@ class NoticeSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(homeProvider);
     final category = _categories[state.selectedTabIndex];
-    final filtered =
-        mockNotices.where((n) => n.category == category).toList();
+
+    // 가짜 데이터(mockNotices) 대신 Provider가 관리하는 실제 데이터(state.notices)를 필터링
+    final filtered = state.notices.where((n) => n.category == category).toList();
 
     return AppCard(
       child: Column(
@@ -69,7 +69,12 @@ class NoticeSection extends ConsumerWidget {
           ),
 
           // 공지 리스트
-          if (filtered.isEmpty)
+          if (state.isLoading)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
+              child: Center(child: CircularProgressIndicator()),
+            )
+          else if (filtered.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
               child: Center(
@@ -82,9 +87,10 @@ class NoticeSection extends ConsumerWidget {
             )
           else
             ...filtered.map(
-              (notice) => InkWell(
+                  (notice) => InkWell(
                 onTap: () => context.push(
-                  '/notice/${mockNotices.indexOf(notice)}',
+                  '/notice/${notice.id}',
+                  extra: notice,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(

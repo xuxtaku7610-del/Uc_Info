@@ -5,15 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
-import 'package:university_portal_flutter/data/mock/mock_data.dart';
 import 'package:university_portal_flutter/data/models/meal_data.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 
 class MealSheet extends StatelessWidget {
-  const MealSheet({super.key});
+  final MealData? meal; // 추후 Provider 등을 통해 주입
+
+  const MealSheet({super.key, this.meal});
 
   @override
   Widget build(BuildContext context) {
+    if (meal == null) {
+      return const SizedBox(
+        height: 300,
+        child: Center(child: Text('식단 정보가 없습니다.')),
+      );
+    }
+
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.md,
@@ -34,17 +42,17 @@ class MealSheet extends StatelessWidget {
             children: [
               Text('오늘의 식단', style: AppTextStyles.heading2),
               const Spacer(),
-              Text(mockMeal.date, style: AppTextStyles.caption),
+              Text(meal!.date, style: AppTextStyles.caption),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
 
           // 조식 / 중식 / 석식
-          _MealCard(label: '조식', section: mockMeal.breakfast),
+          _MealCard(label: '조식', section: meal!.breakfast),
           const SizedBox(height: AppSpacing.sm),
-          _MealCard(label: '중식', section: mockMeal.lunch),
+          _MealCard(label: '중식', section: meal!.lunch),
           const SizedBox(height: AppSpacing.sm),
-          _MealCard(label: '석식', section: mockMeal.dinner),
+          _MealCard(label: '석식', section: meal!.dinner),
           const SizedBox(height: AppSpacing.md),
 
           // 알레르기 안내 (가이드라인: 하단 고정 노란 박스)

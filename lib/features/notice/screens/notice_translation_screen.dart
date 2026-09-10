@@ -1,6 +1,6 @@
 // lib/features/notice/screens/notice_translation_screen.dart
 // 역할: 공지사항 한→영 번역 화면. 외국인 유학생을 위해 한국어 공지사항을
-//       영어로 번역해 보여준다. (Phase 1: MockTranslationRepository 사용)
+//       영어로 번역해 보여준다.
 
 import 'package:flutter/material.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
@@ -19,9 +19,8 @@ class NoticeTranslationScreen extends StatefulWidget {
 class _NoticeTranslationScreenState extends State<NoticeTranslationScreen> {
   // why: Phase 1에서는 Mock 구현체를 직접 사용하고, Phase 2에서는
   //      ApiTranslationRepository로 교체하면 된다 (TODO 주석 참고).
-  // TODO(Phase 2): MockTranslationRepository → ApiTranslationRepository로 교체
-  final TranslationRepository _translationRepository =
-      MockTranslationRepository();
+  // TODO(Phase 2): 추후 제공될 API Repository로 교체
+  final TranslationRepository? _translationRepository = null;
 
   // 화면에 보여줄 하드코딩된 원본 공지사항 (제목/본문)
   static const String _originalTitle = '2026학년도 1학기 수강신청 변경 안내';
@@ -40,6 +39,13 @@ class _NoticeTranslationScreenState extends State<NoticeTranslationScreen> {
   // [Translate to English] 버튼을 눌렀을 때 실행되는 번역 로직.
   // how: 1) 로딩 시작 → 2) 제목/본문을 각각 번역 → 3) 결과 합치기 → 4) 성공/실패에 따라 상태 갱신
   Future<void> _translate() async {
+    if (_translationRepository == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('번역 기능이 아직 활성화되지 않았습니다.')),
+      );
+      return;
+    }
+
     // why: 버튼을 누르는 즉시 로딩 상태로 전환하고, 이전 결과/에러는 초기화한다.
     setState(() {
       _isLoading = true;
@@ -49,10 +55,10 @@ class _NoticeTranslationScreenState extends State<NoticeTranslationScreen> {
 
     try {
       // 제목과 본문을 각각 번역 요청한다.
-      final translatedTitle = await _translationRepository.translate(
+      final translatedTitle = await _translationRepository!.translate(
         _originalTitle,
       );
-      final translatedContent = await _translationRepository.translate(
+      final translatedContent = await _translationRepository!.translate(
         _originalContent,
       );
 

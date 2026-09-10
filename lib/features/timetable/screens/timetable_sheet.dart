@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
-import 'package:university_portal_flutter/data/mock/mock_data.dart';
 import 'package:university_portal_flutter/data/models/schedule_item.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 
 class TimetableSheet extends StatelessWidget {
-  const TimetableSheet({super.key});
+  final List<ScheduleItem> schedule;
+
+  const TimetableSheet({super.key, this.schedule = const []});
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +71,14 @@ class TimetableSheet extends StatelessWidget {
                 controller: scrollController,
                 padding: const EdgeInsets.symmetric(
                     horizontal: AppSpacing.md, vertical: 4),
-                child: _TimetableGrid(schedule: mockSchedule),
+                child: schedule.isEmpty
+                    ? const Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 100),
+                          child: Text('시간표 정보가 없습니다.'),
+                        ),
+                      )
+                    : _TimetableGrid(schedule: schedule),
               ),
             ),
           ],

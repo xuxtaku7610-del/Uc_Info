@@ -2,23 +2,22 @@
 // 역할: 메인 화면. UCHeader + 학생 배너 + 빠른 실행 + 바로가기 + 공지사항을 조립한다.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
-import 'package:university_portal_flutter/data/mock/mock_data.dart';
 import 'package:university_portal_flutter/features/home/widgets/notice_section.dart';
 import 'package:university_portal_flutter/features/home/widgets/quick_action_section.dart';
 import 'package:university_portal_flutter/features/home/widgets/shortcut_grid.dart';
-import 'package:university_portal_flutter/features/home/widgets/student_banner.dart';
 import 'package:university_portal_flutter/features/settings/screens/settings_sheet.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 import 'package:university_portal_flutter/shared/widgets/uc_header.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: UCHeader(
@@ -40,7 +39,6 @@ class HomeScreen extends StatelessWidget {
             children: [
               // ── 1. 학생 인사 배너
               const SizedBox(height: AppSpacing.sm),
-              StudentBanner(user: mockUser),
 
               // ── 2. 빠른 실행 (시간표 · 식단표)
               const SizedBox(height: AppSpacing.lg),

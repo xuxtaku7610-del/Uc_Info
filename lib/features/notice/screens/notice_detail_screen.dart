@@ -6,12 +6,13 @@ import 'package:go_router/go_router.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
-import 'package:university_portal_flutter/data/mock/mock_data.dart';
+import 'package:university_portal_flutter/data/models/notice_item.dart';
 
 class NoticeDetailScreen extends StatelessWidget {
-  final int noticeIndex;
+  final int noticeId;
+  final NoticeItem? notice; // 직접 전달받거나 ID로 조회
 
-  const NoticeDetailScreen({super.key, required this.noticeIndex});
+  const NoticeDetailScreen({super.key, required this.noticeId, this.notice});
 
   // 카테고리 키 → 한국어 레이블
   static const _categoryLabels = {
@@ -23,8 +24,15 @@ class NoticeDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final notice = mockNotices[noticeIndex];
-    final label = _categoryLabels[notice.category] ?? notice.category;
+    // 공지 정보가 없는 경우 처리 (추후 API 연동 시 Provider 등을 통해 가져오도록 수정 필요)
+    if (notice == null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('공지사항')),
+        body: const Center(child: Text('공지사항 정보를 불러올 수 없습니다.')),
+      );
+    }
+
+    final label = _categoryLabels[notice!.category] ?? notice!.category;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -69,13 +77,13 @@ class NoticeDetailScreen extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                Text(notice.date, style: AppTextStyles.caption),
+                Text(notice!.date, style: AppTextStyles.caption),
               ],
             ),
             const SizedBox(height: AppSpacing.sm),
 
             // 제목
-            Text(notice.title, style: AppTextStyles.heading2),
+            Text(notice!.title, style: AppTextStyles.heading2),
             const SizedBox(height: AppSpacing.md),
 
             const Divider(color: AppColors.divider),
@@ -83,7 +91,7 @@ class NoticeDetailScreen extends StatelessWidget {
 
             // 본문
             Text(
-              notice.content,
+              notice!.content,
               style: AppTextStyles.body1.copyWith(
                 height: 1.7,
                 color: AppColors.textPrimary,
