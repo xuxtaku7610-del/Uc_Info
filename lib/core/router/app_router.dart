@@ -11,6 +11,7 @@ import 'package:university_portal_flutter/features/home/screens/home_screen.dart
 import 'package:university_portal_flutter/features/mypage/screens/mypage_screen.dart';
 import 'package:university_portal_flutter/features/notice/screens/notice_detail_screen.dart';
 import 'package:university_portal_flutter/features/notice/screens/notice_translation_screen.dart';
+import 'package:university_portal_flutter/data/models/notice_item.dart';
 
 // GoRouter는 Listenable만 수신 가능 → Riverpod 상태 변화를 ChangeNotifier로 브릿지
 class _RouterNotifier extends ChangeNotifier {

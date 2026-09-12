@@ -9,7 +9,7 @@ import 'package:university_portal_flutter/data/models/meal_data.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 
 class MealSheet extends StatelessWidget {
-  final MealData? meal; // 추후 Provider 등을 통해 주입
+  final MealData? meal;
 
   const MealSheet({super.key, this.meal});
 
@@ -48,14 +48,14 @@ class MealSheet extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
 
           // 조식 / 중식 / 석식
-          _MealCard(label: '조식', section: meal!.breakfast),
+          _buildMealCard('조식', meal!.breakfast),
           const SizedBox(height: AppSpacing.sm),
-          _MealCard(label: '중식', section: meal!.lunch),
+          _buildMealCard('중식', meal!.lunch),
           const SizedBox(height: AppSpacing.sm),
-          _MealCard(label: '석식', section: meal!.dinner),
+          _buildMealCard('석식', meal!.dinner),
           const SizedBox(height: AppSpacing.md),
 
-          // 알레르기 안내 (가이드라인: 하단 고정 노란 박스)
+          // 알레르기 안내
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(AppSpacing.sm),
@@ -76,6 +76,29 @@ class MealSheet extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildMealCard(String label, MealSection? section) {
+    if (section == null) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF9FAFB),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+          border: Border.all(color: AppColors.divider),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(label, style: AppTextStyles.heading3.copyWith(color: AppColors.textHint)),
+            const SizedBox(height: AppSpacing.sm),
+            const Text('오늘은 운영하지 않습니다.', style: AppTextStyles.body2),
+          ],
+        ),
+      );
+    }
+    return _MealCard(label: label, section: section);
+  }
 }
 
 class _MealCard extends StatelessWidget {
@@ -90,7 +113,7 @@ class _MealCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF8EE), // 크림색 — 가이드라인 spec
+        color: const Color(0xFFFFF8EE), // 크림색
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         border: Border.all(color: AppColors.accent.withValues(alpha: 0.3)),
       ),
@@ -105,13 +128,16 @@ class _MealCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
-          Wrap(
-            spacing: AppSpacing.md,
-            runSpacing: AppSpacing.xs,
-            children: section.items
-                .map((item) => _MealDot(item: item))
-                .toList(),
-          ),
+          if (section.items.isEmpty)
+            const Text('식단 정보가 없습니다.', style: AppTextStyles.body2)
+          else
+            Wrap(
+              spacing: AppSpacing.md,
+              runSpacing: AppSpacing.xs,
+              children: section.items
+                  .map((item) => _MealDot(item: item))
+                  .toList(),
+            ),
         ],
       ),
     );

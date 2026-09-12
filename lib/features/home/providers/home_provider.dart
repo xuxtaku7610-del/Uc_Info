@@ -4,7 +4,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/models/notice_item.dart';
 import '../../../data/repositories/notice_repository.dart';
-import '../../../data/repositories/api_notice_repository.dart';
+import '../../../shared/providers/app_providers.dart';
 
 class HomeState {
   final int selectedTabIndex; // 0=공지사항, 1=학과소식, 2=학과공지, 3=장학·취업
@@ -51,5 +51,8 @@ class HomeNotifier extends StateNotifier<HomeState> {
 }
 
 final homeProvider = StateNotifierProvider<HomeNotifier, HomeState>(
-  (ref) => HomeNotifier(ApiNoticeRepository()),
+  (ref) {
+    final repository = ref.watch(noticeRepositoryProvider);
+    return HomeNotifier(repository);
+  },
 );

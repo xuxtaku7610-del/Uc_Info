@@ -1,5 +1,30 @@
 // lib/shared/providers/app_providers.dart
-// 역할: 앱 전역 공통 Riverpod Provider. 여러 feature에서 공유하는 상태를 여기서 관리한다.
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/network/api_client.dart';
+import '../../data/repositories/auth_repository.dart';
+import '../../data/repositories/api_auth_repository.dart';
+import '../../data/repositories/notice_repository.dart';
+import '../../data/repositories/meal_repository.dart';
 
-// TODO: 공통으로 사용되는 Provider를 여기에 추가한다.
-// 예) 현재 로그인한 사용자 정보, 다크모드 상태, 언어 설정 등
+// 1. ApiClient Provider
+final apiClientProvider = Provider<ApiClient>((ref) => ApiClient());
+
+// 2. Auth Repository Provider
+final authRepositoryProvider = Provider<AuthRepository>((ref) {
+  final apiClient = ref.watch(apiClientProvider);
+  return ApiAuthRepository(apiClient);
+});
+
+// 3. Notice Repository Provider (TODO: Phase2 전환 시 ApiNoticeRepository로 교체)
+final noticeRepositoryProvider = Provider<NoticeRepository>((ref) {
+  // final apiClient = ref.watch(apiClientProvider);
+  // return ApiNoticeRepository(apiClient);
+  return MockNoticeRepository();
+});
+
+// 4. Meal Repository Provider (TODO: Phase2 전환 시 ApiMealRepository로 교체)
+final mealRepositoryProvider = Provider<MealRepository>((ref) {
+  // final apiClient = ref.watch(apiClientProvider);
+  // return ApiMealRepository(apiClient);
+  return MockMealRepository();
+});

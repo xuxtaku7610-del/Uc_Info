@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:university_portal_flutter/data/repositories/auth_repository.dart';
 import 'package:university_portal_flutter/features/auth/providers/auth_session_provider.dart';
 import 'package:university_portal_flutter/data/repositories/api_auth_repository.dart';
+import 'package:university_portal_flutter/shared/providers/app_providers.dart';
 
 class AuthState {
   final bool isLoading;
@@ -91,5 +92,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
 }
 
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
-  return AuthNotifier(repository: ApiAuthRepository(), ref: ref);
+  final repository = ref.watch(authRepositoryProvider);
+  return AuthNotifier(repository: repository, ref: ref);
 });
