@@ -5,7 +5,7 @@ import '../mock/mock_data.dart';
 abstract class NoticeRepository {
   Future<List<NoticeItem>> getNotices();
   Future<NoticeItem> getNoticeDetail(int id);
-  Future<void> markAsRead(int id);
+  Future<void> markAsRead(int id, String studentId);
 }
 
 class MockNoticeRepository implements NoticeRepository {
@@ -25,8 +25,7 @@ class MockNoticeRepository implements NoticeRepository {
   }
 
   @override
-  Future<void> markAsRead(int id) async {
+  Future<void> markAsRead(int id, String studentId) async {
     await Future.delayed(const Duration(milliseconds: 200));
-    // 실제 상태 변경 로직은 생략하거나 MockData를 수정 가능하게 만들 수 있음
   }
 }

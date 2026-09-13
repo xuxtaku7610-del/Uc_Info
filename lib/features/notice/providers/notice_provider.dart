@@ -30,9 +30,9 @@ class NoticeProvider with ChangeNotifier {
     }
   }
 
-  Future<void> readNotice(int id) async {
+  Future<void> readNotice(int id, String studentId) async {
     try {
-      await repository.markAsRead(id);
+      await repository.markAsRead(id, studentId);
       final index = _notices.indexWhere((n) => n.id == id);
       if (index != -1) {
         _notices[index] = _notices[index].copyWith(isRead: true);

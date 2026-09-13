@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import '../../core/network/api_client.dart';
+import '../../core/network/token_storage.dart';
 import 'auth_repository.dart';
 import '../models/user.dart';
 
@@ -22,7 +23,14 @@ class ApiAuthRepository implements AuthRepository {
         'studentId': studentId,
       });
 
-      return User.fromJson(response.data);
+      final user = User.fromJson(response.data);
+      
+      // 로그인 성공 시 응답에서 토큰을 추출하여 저장 (응답 구조에 따라 수정 필요)
+      // 현재는 studentId를 토큰 대용으로 쓰거나 별도 필드가 있다고 가정
+      final token = response.data['token'] ?? studentId; 
+      await TokenStorage.saveToken(token);
+
+      return user;
     } on DioException catch (e) {
       throw Exception('학생 인증 실패: ${e.response?.data ?? e.message}');
     } catch (e) {
@@ -36,11 +44,9 @@ class ApiAuthRepository implements AuthRepository {
       final response = await _apiClient.dio.get('/api/users/me');
       return User.fromJson(response.data);
     } on DioException catch (e) {
-      // 401 Unauthorized인 경우에만 세션 만료로 보고 null 반환
       if (e.response?.statusCode == 401) {
         return null;
       }
-      // 그 외의 에러는 외부에서 파악할 수 있도록 throw
       rethrow;
     }
   }

@@ -59,17 +59,17 @@ class MealSheet extends ConsumerWidget {
             children: [
               Text('오늘의 식단', style: AppTextStyles.heading2),
               const Spacer(),
-              Text(meal!.date, style: AppTextStyles.caption),
+              Text(meal.date, style: AppTextStyles.caption),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
 
           // 조식 / 중식 / 석식
-          _buildMealCard('조식', meal!.breakfast),
+          _buildMealCard('조식', meal.breakfast),
           const SizedBox(height: AppSpacing.sm),
-          _buildMealCard('중식', meal!.lunch),
+          _buildMealCard('중식', meal.lunch),
           const SizedBox(height: AppSpacing.sm),
-          _buildMealCard('석식', meal!.dinner),
+          _buildMealCard('석식', meal.dinner),
           const SizedBox(height: AppSpacing.md),
 
           // 알레르기 안내

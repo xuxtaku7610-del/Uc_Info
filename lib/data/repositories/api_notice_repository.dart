@@ -11,7 +11,8 @@ class ApiNoticeRepository implements NoticeRepository {
   @override
   Future<List<NoticeItem>> getNotices() async {
     try {
-      final response = await _apiClient.dio.get('/api/notice');
+      // 백엔드 명세에 맞춰 복수형(/api/notices)으로 수정
+      final response = await _apiClient.dio.get('/api/notices');
 
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
@@ -26,7 +27,8 @@ class ApiNoticeRepository implements NoticeRepository {
   @override
   Future<NoticeItem> getNoticeDetail(int id) async {
     try {
-      final response = await _apiClient.dio.get('/api/notice/$id');
+      // 백엔드 명세에 맞춰 복수형(/api/notices)으로 수정
+      final response = await _apiClient.dio.get('/api/notices/$id');
 
       if (response.statusCode == 200) {
         return NoticeItem.fromJson(response.data);
@@ -38,9 +40,13 @@ class ApiNoticeRepository implements NoticeRepository {
   }
 
   @override
-  Future<void> markAsRead(int id) async {
+  Future<void> markAsRead(int id, String studentId) async {
     try {
-      await _apiClient.dio.post('/api/notice/$id/view');
+      // 백엔드 NoticeViewRequest 규격에 맞춰 바디에 studentId 포함
+      await _apiClient.dio.post(
+        '/api/notices/$id/view',
+        data: {'studentId': studentId},
+      );
     } on DioException catch (e) {
       throw Exception('읽음 처리 실패: ${e.message}');
     }
