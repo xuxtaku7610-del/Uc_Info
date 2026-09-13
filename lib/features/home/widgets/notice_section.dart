@@ -10,7 +10,7 @@ import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
 import 'package:university_portal_flutter/features/home/providers/home_provider.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 
-const _tabs = ['공지사항', '학과소식', '학과공지', '장학금', '취업'];
+const _tabs = ['학사', '학과공지', '행사', '장학금', '취업'];
 const _categories = ['ACADEMIC', 'DEPARTMENT', 'EVENT', 'SCHOLARSHIP', 'EMPLOYMENT'];
 
 class NoticeSection extends ConsumerWidget {

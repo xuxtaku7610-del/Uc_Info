@@ -43,9 +43,9 @@ class _NoticeDetailScreenState extends ConsumerState<NoticeDetailScreen> {
 
   // 카테고리 키 → 한국어 레이블 (백엔드 대문자 규격에 맞춤)
   static const _categoryLabels = {
-    'ACADEMIC':    '공지사항',
-    'DEPARTMENT':  '학과소식',
-    'EVENT':       '학과공지',
+    'ACADEMIC':    '학사',
+    'DEPARTMENT':  '학과공지',
+    'EVENT':       '행사',
     'SCHOLARSHIP': '장학금',
     'EMPLOYMENT':  '취업',
   };
