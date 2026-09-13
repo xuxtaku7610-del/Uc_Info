@@ -35,15 +35,19 @@ class _NoticeDetailScreenState extends ConsumerState<NoticeDetailScreen> {
     final user = ref.read(userProvider).user;
     if (user != null) {
       ref.read(noticeRepositoryProvider).markAsRead(widget.noticeId, user.studentId);
+    } else {
+      // 혹시라도 아직 user 로딩 전이라면 listener를 통해 로딩 완료 시점에 재시도하도록 구성 가능
+      debugPrint('Warning: studentId is null, marking as read skipped.');
     }
   }
 
-  // 카테고리 키 → 한국어 레이블
+  // 카테고리 키 → 한국어 레이블 (백엔드 대문자 규격에 맞춤)
   static const _categoryLabels = {
-    'notice':      '공지사항',
-    'dept_news':   '학과소식',
-    'dept_notice': '학과공지',
-    'scholarship': '장학·취업',
+    'ACADEMIC':    '공지사항',
+    'DEPARTMENT':  '학과소식',
+    'EVENT':       '학과공지',
+    'SCHOLARSHIP': '장학금',
+    'EMPLOYMENT':  '취업',
   };
 
   @override
