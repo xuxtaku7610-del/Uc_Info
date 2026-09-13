@@ -25,9 +25,11 @@ class ApiAuthRepository implements AuthRepository {
 
       final user = User.fromJson(response.data);
       
-      // 로그인 성공 시 응답에서 토큰을 추출하여 저장 (응답 구조에 따라 수정 필요)
-      // 현재는 studentId를 토큰 대용으로 쓰거나 별도 필드가 있다고 가정
-      final token = response.data['token'] ?? studentId; 
+      // 로그인 성공 시 응답에서 토큰을 추출하여 저장
+      final token = response.data['token']; 
+      if (token == null) {
+        throw Exception('서버 응답에 인증 토큰이 누락되었습니다.');
+      }
       await TokenStorage.saveToken(token);
 
       return user;

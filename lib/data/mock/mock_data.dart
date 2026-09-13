@@ -31,6 +31,7 @@ class MockData {
   // 2. 시간표 더미 데이터 (ScheduleItem 모델 기반)
   static final List<ScheduleItem> schedules = [
     const ScheduleItem(
+      enrollmentId: 101,
       subject: '운영체제',
       day: '월',
       startHour: 9,
@@ -40,6 +41,7 @@ class MockData {
       color: 0,
     ),
     const ScheduleItem(
+      enrollmentId: 102,
       subject: '알고리즘',
       day: '화',
       startHour: 13,

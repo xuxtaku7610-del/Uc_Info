@@ -2,6 +2,7 @@
 // 역할: 주간 시간표 수업 블록 모델.
 
 class ScheduleItem {
+  final int? enrollmentId; // 수강 취소(삭제) 시 필요한 고유 ID
   final String subject;
   final String day;       // '월' | '화' | '수' | '목' | '금'
   final int startHour;
@@ -11,6 +12,7 @@ class ScheduleItem {
   final int color;        // AppColors.timetableColors 인덱스 (6으로 나눈 나머지로 순환)
 
   const ScheduleItem({
+    this.enrollmentId,
     required this.subject,
     required this.day,
     required this.startHour,
@@ -22,6 +24,7 @@ class ScheduleItem {
 
   factory ScheduleItem.fromJson(Map<String, dynamic> json) {
     return ScheduleItem(
+      enrollmentId: json['enrollmentId'],
       subject: json['subject'] ?? '',
       day: json['day'] ?? '월',
       startHour: json['startHour'] ?? 9,

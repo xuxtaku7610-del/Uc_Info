@@ -2,17 +2,41 @@
 // 역할: 공지사항 상세 화면. 카테고리 뱃지, 날짜, 제목, 본문을 표시한다.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
 import 'package:university_portal_flutter/data/models/notice_item.dart';
+import 'package:university_portal_flutter/features/auth/providers/user_provider.dart';
+import 'package:university_portal_flutter/shared/providers/app_providers.dart';
 
-class NoticeDetailScreen extends StatelessWidget {
+class NoticeDetailScreen extends ConsumerStatefulWidget {
   final int noticeId;
   final NoticeItem? notice; // 직접 전달받거나 ID로 조회
 
   const NoticeDetailScreen({super.key, required this.noticeId, this.notice});
+
+  @override
+  ConsumerState<NoticeDetailScreen> createState() => _NoticeDetailScreenState();
+}
+
+class _NoticeDetailScreenState extends ConsumerState<NoticeDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // 화면 진입 시 비동기로 읽음 처리 실행
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _markAsRead();
+    });
+  }
+
+  void _markAsRead() {
+    final user = ref.read(userProvider).user;
+    if (user != null) {
+      ref.read(noticeRepositoryProvider).markAsRead(widget.noticeId, user.studentId);
+    }
+  }
 
   // 카테고리 키 → 한국어 레이블
   static const _categoryLabels = {
@@ -24,6 +48,8 @@ class NoticeDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final notice = widget.notice;
+
     // 공지 정보가 없는 경우 처리 (추후 API 연동 시 Provider 등을 통해 가져오도록 수정 필요)
     if (notice == null) {
       return Scaffold(
@@ -32,7 +58,7 @@ class NoticeDetailScreen extends StatelessWidget {
       );
     }
 
-    final label = _categoryLabels[notice!.category] ?? notice!.category;
+    final label = _categoryLabels[notice.category] ?? notice.category;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -77,13 +103,13 @@ class NoticeDetailScreen extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                Text(notice!.date, style: AppTextStyles.caption),
+                Text(notice.date, style: AppTextStyles.caption),
               ],
             ),
             const SizedBox(height: AppSpacing.sm),
 
             // 제목
-            Text(notice!.title, style: AppTextStyles.heading2),
+            Text(notice.title, style: AppTextStyles.heading2),
             const SizedBox(height: AppSpacing.md),
 
             const Divider(color: AppColors.divider),
@@ -91,7 +117,7 @@ class NoticeDetailScreen extends StatelessWidget {
 
             // 본문
             Text(
-              notice!.content,
+              notice.content,
               style: AppTextStyles.body1.copyWith(
                 height: 1.7,
                 color: AppColors.textPrimary,
