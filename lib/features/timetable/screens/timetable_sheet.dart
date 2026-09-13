@@ -2,19 +2,21 @@
 // 역할: 주간 시간표 Bottom Sheet. 월~금 그리드에 과목별 색상 블록 표시. 탭으로 90%까지 확장 가능.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
 import 'package:university_portal_flutter/data/models/schedule_item.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
+import '../providers/timetable_provider.dart';
 
-class TimetableSheet extends StatelessWidget {
-  final List<ScheduleItem> schedule;
-
-  const TimetableSheet({super.key, this.schedule = const []});
+class TimetableSheet extends ConsumerWidget {
+  const TimetableSheet({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(timetableProvider);
+
     return DraggableScrollableSheet(
       initialChildSize: 0.7,
       maxChildSize: 0.9,
@@ -36,7 +38,7 @@ class TimetableSheet extends StatelessWidget {
                 children: [
                   Text('주간 시간표', style: AppTextStyles.heading2),
                   const Spacer(),
-                  Text('2026학년도 1학기', style: AppTextStyles.caption),
+                  const Text('2026학년도 1학기', style: AppTextStyles.caption),
                 ],
               ),
             ),
@@ -63,23 +65,27 @@ class TimetableSheet extends StatelessWidget {
                 ],
               ),
             ),
-            Divider(height: 8, color: AppColors.divider),
+            const Divider(height: 8, color: AppColors.divider),
 
             // 그리드 본문
             Expanded(
-              child: SingleChildScrollView(
-                controller: scrollController,
-                padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md, vertical: 4),
-                child: schedule.isEmpty
-                    ? const Center(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 100),
-                          child: Text('시간표 정보가 없습니다.'),
+              child: state.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : state.errorMessage != null
+                      ? Center(child: Text(state.errorMessage!))
+                      : SingleChildScrollView(
+                          controller: scrollController,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.md, vertical: 4),
+                          child: state.schedule.isEmpty
+                              ? const Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 100),
+                                    child: Text('시간표 정보가 없습니다.'),
+                                  ),
+                                )
+                              : _TimetableGrid(schedule: state.schedule),
                         ),
-                      )
-                    : _TimetableGrid(schedule: schedule),
-              ),
             ),
           ],
         );

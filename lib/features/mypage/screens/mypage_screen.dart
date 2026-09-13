@@ -9,6 +9,7 @@ import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
 import 'package:university_portal_flutter/data/models/user.dart';
 import 'package:university_portal_flutter/features/auth/providers/auth_session_provider.dart';
+import 'package:university_portal_flutter/features/auth/providers/user_provider.dart';
 import 'package:university_portal_flutter/features/settings/providers/settings_provider.dart';
 
 class MypageScreen extends ConsumerWidget {
@@ -17,8 +18,8 @@ class MypageScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingsProvider);
-    // TODO: 실제 사용자 정보 Provider에서 가져오도록 수정 필요
-    final user = User(studentId: '-', name: '사용자', department: '-', year: 1);
+    final userState = ref.watch(userProvider);
+    final user = userState.user ?? User(studentId: '-', name: '사용자', department: '-', year: 1);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -28,7 +29,10 @@ class MypageScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // ── 1. 학생증 카드
-              _StudentCard(user: user),
+              if (userState.isLoading)
+                const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()))
+              else
+                _StudentCard(user: user),
 
               // ── 2. 학사 정보
               const _SectionHeader(title: '학사 정보'),

@@ -1,5 +1,6 @@
 // lib/data/models/notice_item.dart
-// 역할: 공지사항 데이터 모델.
+// 공지사항 정보를 담는 데이터 모델 클래스
+// 카테고리, 작성일, 읽음 여부 등의 필드를 포함
 
 class NoticeItem {
   final int id;

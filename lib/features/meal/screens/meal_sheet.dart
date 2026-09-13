@@ -2,19 +2,36 @@
 // 역할: 오늘의 식단표 Bottom Sheet. 조식·중식·석식 섹션과 알레르기 안내 표시.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
 import 'package:university_portal_flutter/data/models/meal_data.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
+import '../providers/meal_provider.dart';
 
-class MealSheet extends StatelessWidget {
-  final MealData? meal;
-
-  const MealSheet({super.key, this.meal});
+class MealSheet extends ConsumerWidget {
+  const MealSheet({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(mealProvider);
+
+    if (state.isLoading) {
+      return const SizedBox(
+        height: 300,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (state.errorMessage != null) {
+      return SizedBox(
+        height: 300,
+        child: Center(child: Text(state.errorMessage!)),
+      );
+    }
+
+    final meal = state.meal;
     if (meal == null) {
       return const SizedBox(
         height: 300,

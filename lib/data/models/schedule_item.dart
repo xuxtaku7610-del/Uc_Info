@@ -19,4 +19,16 @@ class ScheduleItem {
     required this.professor,
     required this.color,
   });
+
+  factory ScheduleItem.fromJson(Map<String, dynamic> json) {
+    return ScheduleItem(
+      subject: json['subject'] ?? '',
+      day: json['day'] ?? '월',
+      startHour: json['startHour'] ?? 9,
+      endHour: json['endHour'] ?? 10,
+      room: json['room'] ?? '',
+      professor: json['professor'] ?? '',
+      color: json['color'] ?? 0,
+    );
+  }
 }

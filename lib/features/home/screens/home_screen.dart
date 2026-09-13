@@ -9,6 +9,8 @@ import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
 import 'package:university_portal_flutter/features/home/widgets/notice_section.dart';
 import 'package:university_portal_flutter/features/home/widgets/quick_action_section.dart';
 import 'package:university_portal_flutter/features/home/widgets/shortcut_grid.dart';
+import 'package:university_portal_flutter/features/home/widgets/student_banner.dart';
+import 'package:university_portal_flutter/features/auth/providers/user_provider.dart';
 import 'package:university_portal_flutter/features/settings/screens/settings_sheet.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 import 'package:university_portal_flutter/shared/widgets/uc_header.dart';
@@ -18,6 +20,8 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userState = ref.watch(userProvider);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: UCHeader(
@@ -38,7 +42,15 @@ class HomeScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // ── 1. 학생 인사 배너
-              const SizedBox(height: AppSpacing.sm),
+              if (userState.isLoading)
+                const SizedBox(
+                  height: 120,
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              else if (userState.user != null)
+                StudentBanner(user: userState.user!)
+              else
+                const SizedBox(height: AppSpacing.sm),
 
               // ── 2. 빠른 실행 (시간표 · 식단표)
               const SizedBox(height: AppSpacing.lg),
