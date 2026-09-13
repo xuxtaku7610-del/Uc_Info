@@ -1,26 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:university_portal_flutter/core/router/app_router.dart';
+import 'app.dart';
 
 void main() {
   runApp(
     const ProviderScope(
-      child: MyApp(),
+      child: UniversityPortalApp(),
     ),
   );
-}
-
-class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(routerProvider);
-
-    return MaterialApp.router(
-      title: 'UC Info',
-      debugShowCheckedModeBanner: false,
-      routerConfig: router,
-    );
-  }
 }
