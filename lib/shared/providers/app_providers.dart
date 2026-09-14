@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/network/api_client.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/api_auth_repository.dart';
-import '../../data/models/user.dart';
 import '../../data/repositories/notice_repository.dart';
 import '../../data/repositories/api_notice_repository.dart';
 import '../../data/repositories/meal_repository.dart';
@@ -24,22 +23,11 @@ import '../../data/repositories/api_enrollment_repository.dart';
 // 1. ApiClient Provider
 final apiClientProvider = Provider<ApiClient>((ref) => ApiClient());
 
-// 2. Auth Repository Provider
+// 2. Auth Repository Provider (API 연결 완료)
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  // return ApiAuthRepository(ref.watch(apiClientProvider));
-  return MockAuthRepository(); // 임시 더미 로그인 활성화
+  final apiClient = ref.watch(apiClientProvider);
+  return ApiAuthRepository(apiClient);
 });
-
-// 간단한 더미 로그인용 Mock 클래스
-class MockAuthRepository implements AuthRepository {
-  @override
-  Future<User> verifyStudent({required String name, required String department, required String studentId}) async {
-    // 아무 값이나 입력해도 7자리 숫자이기만 하면 로그인 성공 처리
-    return User(studentId: studentId, name: name, department: department, year: 1);
-  }
-  @override
-  Future<User?> getMe() async => User(studentId: '2024001', name: '테스터', department: '컴퓨터공학', year: 1);
-}
 
 // 3. Notice Repository Provider (API 연결 완료)
 final noticeRepositoryProvider = Provider<NoticeRepository>((ref) {
@@ -53,40 +41,38 @@ final mealRepositoryProvider = Provider<MealRepository>((ref) {
   return ApiMealRepository(apiClient);
 });
 
-// 5. Schedule Repository Provider (백엔드 API 미준비로 인한 임시 Mock 유지)
+// 5. Schedule Repository Provider (API 연결 완료)
 final scheduleRepositoryProvider = Provider<ScheduleRepository>((ref) {
-  // TODO: 백엔드 API(/api/schedule/me) 준비 완료 시 아래 코드로 교체
-  // final apiClient = ref.watch(apiClientProvider);
-  // return ApiScheduleRepository(apiClient);
-  return MockScheduleRepository();
+  final apiClient = ref.watch(apiClientProvider);
+  return ApiScheduleRepository(apiClient);
 });
 
-// 6. Banner Repository Provider
+// 6. Banner Repository Provider (API 연결 완료)
 final bannerRepositoryProvider = Provider<BannerRepository>((ref) {
-  // Phase 2 전환 시: return ApiBannerRepository(ref.watch(apiClientProvider));
-  return MockBannerRepository();
+  final apiClient = ref.watch(apiClientProvider);
+  return ApiBannerRepository(apiClient);
 });
 
-// 7. Academic Calendar Repository Provider
+// 7. Academic Calendar Repository Provider (API 연결 완료)
 final academicCalendarRepositoryProvider = Provider<AcademicCalendarRepository>((ref) {
-  // Phase 2 전환 시: return ApiAcademicCalendarRepository(ref.watch(apiClientProvider));
-  return MockAcademicCalendarRepository();
+  final apiClient = ref.watch(apiClientProvider);
+  return ApiAcademicCalendarRepository(apiClient);
 });
 
-// 8. Scholarship Repository Provider
+// 8. Scholarship Repository Provider (API 연결 완료)
 final scholarshipRepositoryProvider = Provider<ScholarshipRepository>((ref) {
-  // Phase 2 전환 시: return ApiScholarshipRepository(ref.watch(apiClientProvider));
-  return MockScholarshipRepository();
+  final apiClient = ref.watch(apiClientProvider);
+  return ApiScholarshipRepository(apiClient);
 });
 
-// 9. Course Repository Provider
+// 9. Course Repository Provider (API 연결 완료)
 final courseRepositoryProvider = Provider<CourseRepository>((ref) {
-  // Phase 2 전환 시: return ApiCourseRepository(ref.watch(apiClientProvider));
-  return MockCourseRepository();
+  final apiClient = ref.watch(apiClientProvider);
+  return ApiCourseRepository(apiClient);
 });
 
-// 10. Enrollment Repository Provider
+// 10. Enrollment Repository Provider (API 연결 완료)
 final enrollmentRepositoryProvider = Provider<EnrollmentRepository>((ref) {
-  // Phase 2 전환 시: return ApiEnrollmentRepository(ref.watch(apiClientProvider));
-  return MockEnrollmentRepository();
+  final apiClient = ref.watch(apiClientProvider);
+  return ApiEnrollmentRepository(apiClient);
 });
