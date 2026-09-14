@@ -18,7 +18,9 @@ class ApiMealRepository implements MealRepository {
       }
       throw Exception('오늘의 식단 데이터가 없습니다.');
     } on DioException catch (e) {
-      throw Exception('식단 정보 불러오기 실패: ${e.message}');
+      final data = e.response?.data;
+      final message = (data is Map && data['message'] != null) ? data['message'] as String : '식단 정보 불러오기 실패: ${e.message}';
+      throw Exception(message);
     }
   }
 }

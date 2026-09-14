@@ -19,7 +19,9 @@ class ApiScheduleRepository implements ScheduleRepository {
       }
       return [];
     } on DioException catch (e) {
-      throw Exception('시간표 정보 불러오기 실패: ${e.message}');
+      final data = e.response?.data;
+      final message = (data is Map && data['message'] != null) ? data['message'] as String : '시간표 정보 불러오기 실패: ${e.message}';
+      throw Exception(message);
     }
   }
 }

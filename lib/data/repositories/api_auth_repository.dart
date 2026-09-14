@@ -25,8 +25,9 @@ class ApiAuthRepository implements AuthRepository {
 
       final user = User.fromJson(response.data);
       
-      // 로그인 성공 시 응답에서 토큰을 추출하여 저장
-      final token = response.data['token']; 
+      final data = response.data;
+      final token = (data is Map && data['token'] != null) ? data['token'] as String : null;
+      
       if (token == null) {
         throw Exception('서버 응답에 인증 토큰이 누락되었습니다.');
       }
@@ -34,7 +35,9 @@ class ApiAuthRepository implements AuthRepository {
 
       return user;
     } on DioException catch (e) {
-      throw Exception('학생 인증 실패: ${e.response?.data ?? e.message}');
+      final data = e.response?.data;
+      final message = (data is Map && data['message'] != null) ? data['message'] as String : '학생 인증 실패: ${e.message}';
+      throw Exception(message);
     } catch (e) {
       throw Exception('알 수 없는 오류가 발생했습니다: $e');
     }
@@ -49,7 +52,9 @@ class ApiAuthRepository implements AuthRepository {
       if (e.response?.statusCode == 401) {
         return null;
       }
-      rethrow;
+      final data = e.response?.data;
+      final message = (data is Map && data['message'] != null) ? data['message'] as String : '내 정보 불러오기 실패: ${e.message}';
+      throw Exception(message);
     }
   }
 }

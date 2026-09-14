@@ -1,7 +1,8 @@
 // lib/features/settings/providers/settings_provider.dart
-// 역할: 알림·다크모드·언어 설정 상태 관리.
+// 역할: 알림·다크모드·언어 설정 상태 관리 및 영속화.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsState {
   final bool notificationsEnabled;
@@ -28,16 +29,41 @@ class SettingsState {
 }
 
 class SettingsNotifier extends StateNotifier<SettingsState> {
-  SettingsNotifier() : super(const SettingsState());
+  SettingsNotifier() : super(const SettingsState()) {
+    _loadSettings();
+  }
 
-  void toggleNotifications(bool value) =>
-      state = state.copyWith(notificationsEnabled: value);
+  static const _keyDarkMode = 'setting_dark_mode';
+  static const _keyNotifications = 'setting_notifications';
+  static const _keyLanguage = 'setting_language';
 
-  void toggleDarkMode(bool value) =>
-      state = state.copyWith(darkModeEnabled: value);
+  Future<void> _loadSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    state = SettingsState(
+      darkModeEnabled: prefs.getBool(_keyDarkMode) ?? false,
+      notificationsEnabled: prefs.getBool(_keyNotifications) ?? true,
+      language: prefs.getString(_keyLanguage) ?? '한국어',
+    );
+  }
 
-  void setLanguage(String? value) {
-    if (value != null) state = state.copyWith(language: value);
+  Future<void> toggleNotifications(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyNotifications, value);
+    state = state.copyWith(notificationsEnabled: value);
+  }
+
+  Future<void> toggleDarkMode(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyDarkMode, value);
+    state = state.copyWith(darkModeEnabled: value);
+  }
+
+  Future<void> setLanguage(String? value) async {
+    if (value != null) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_keyLanguage, value);
+      state = state.copyWith(language: value);
+    }
   }
 }
 

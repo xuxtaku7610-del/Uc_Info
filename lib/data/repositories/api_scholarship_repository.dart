@@ -29,7 +29,8 @@ class ApiScholarshipRepository implements ScholarshipRepository {
       }
       return [];
     } on DioException catch (e) {
-      final message = e.response?.data['message'] ?? '장학금 목록을 불러오지 못했습니다.';
+      final data = e.response?.data;
+      final message = (data is Map && data['message'] != null) ? data['message'] as String : '장학금 목록을 불러오지 못했습니다.';
       throw Exception(message);
     }
   }
@@ -44,7 +45,8 @@ class ApiScholarshipRepository implements ScholarshipRepository {
       }
       throw Exception('데이터 없음');
     } on DioException catch (e) {
-      final message = e.response?.data['message'] ?? '장학금 상세 정보를 불러오지 못했습니다.';
+      final data = e.response?.data;
+      final message = (data is Map && data['message'] != null) ? data['message'] as String : '장학금 상세 정보를 불러오지 못했습니다.';
       throw Exception(message);
     }
   }

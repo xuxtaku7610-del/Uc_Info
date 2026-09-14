@@ -26,21 +26,8 @@ final apiClientProvider = Provider<ApiClient>((ref) => ApiClient());
 
 // 2. Auth Repository Provider
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  // final apiClient = ref.watch(apiClientProvider);
-  // return ApiAuthRepository(apiClient);
-  return MockAuthRepository(); // 테스트를 위한 임시 Mock 전환
+  return ApiAuthRepository(ref.watch(apiClientProvider));
 });
-
-// 아래에 간단한 Mock 클래스 추가 (테스트 후 삭제 예정)
-class MockAuthRepository implements AuthRepository {
-  @override
-  Future<User> verifyStudent({required String name, required String department, required String studentId}) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    return User(studentId: studentId, name: name, department: department, year: 2);
-  }
-  @override
-  Future<User?> getMe() async => User(studentId: '2411206', name: '김철수', department: '컴퓨터공학과', year: 2);
-}
 
 // 3. Notice Repository Provider (API 연결 완료)
 final noticeRepositoryProvider = Provider<NoticeRepository>((ref) {
@@ -54,10 +41,12 @@ final mealRepositoryProvider = Provider<MealRepository>((ref) {
   return ApiMealRepository(apiClient);
 });
 
-// 5. Schedule Repository Provider (API 연결 완료)
+// 5. Schedule Repository Provider (백엔드 API 미준비로 인한 임시 Mock 유지)
 final scheduleRepositoryProvider = Provider<ScheduleRepository>((ref) {
-  final apiClient = ref.watch(apiClientProvider);
-  return ApiScheduleRepository(apiClient);
+  // TODO: 백엔드 API(/api/schedule/me) 준비 완료 시 아래 코드로 교체
+  // final apiClient = ref.watch(apiClientProvider);
+  // return ApiScheduleRepository(apiClient);
+  return MockScheduleRepository();
 });
 
 // 6. Banner Repository Provider

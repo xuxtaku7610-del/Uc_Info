@@ -21,7 +21,8 @@ class ApiCourseRepository implements CourseRepository {
       }
       return [];
     } on DioException catch (e) {
-      final message = e.response?.data['message'] ?? '개설과목을 불러오지 못했습니다.';
+      final data = e.response?.data;
+      final message = (data is Map && data['message'] != null) ? data['message'] as String : '개설과목을 불러오지 못했습니다.';
       throw Exception(message);
     }
   }

@@ -21,7 +21,8 @@ class ApiBannerRepository implements BannerRepository {
       }
       return [];
     } on DioException catch (e) {
-      final message = e.response?.data['message'] ?? '배너 정보를 불러오지 못했습니다.';
+      final data = e.response?.data;
+      final message = (data is Map && data['message'] != null) ? data['message'] as String : '배너 정보를 불러오지 못했습니다.';
       throw Exception(message);
     }
   }
