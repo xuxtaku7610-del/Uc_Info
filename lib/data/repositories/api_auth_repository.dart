@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import '../../core/network/api_client.dart';
 import '../../core/network/token_storage.dart';
+import '../../core/network/api_exception_util.dart';
 import 'auth_repository.dart';
 import '../models/user.dart';
 
@@ -35,9 +36,7 @@ class ApiAuthRepository implements AuthRepository {
 
       return user;
     } on DioException catch (e) {
-      final data = e.response?.data;
-      final message = (data is Map && data['message'] != null) ? data['message'] as String : '학생 인증 실패: ${e.message}';
-      throw Exception(message);
+      throw Exception(extractErrorMessage(e, '학생 인증 실패: ${e.message}'));
     } catch (e) {
       throw Exception('알 수 없는 오류가 발생했습니다: $e');
     }
@@ -52,9 +51,7 @@ class ApiAuthRepository implements AuthRepository {
       if (e.response?.statusCode == 401) {
         return null;
       }
-      final data = e.response?.data;
-      final message = (data is Map && data['message'] != null) ? data['message'] as String : '내 정보 불러오기 실패: ${e.message}';
-      throw Exception(message);
+      throw Exception(extractErrorMessage(e, '내 정보 불러오기 실패: ${e.message}'));
     }
   }
 }

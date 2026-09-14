@@ -6,7 +6,7 @@ class NoticeItem {
   final int id;
   final String title;
   final String content;
-  final String category; // 'notice', 'dept_news', 'dept_notice', 'scholarship'
+  final String category; // 'ACADEMIC' | 'DEPARTMENT' | 'SCHOLARSHIP' | 'EVENT' | 'EMPLOYMENT'
   final String date;     // 'MM.dd' 형식 (예: '09.10')
   final bool isRead;
 
@@ -24,7 +24,7 @@ class NoticeItem {
       id: json['id'] ?? 0,
       title: json['title'] ?? '',
       content: json['content'] ?? '',
-      category: json['category'] ?? 'notice',
+      category: json['category'] ?? 'DEPARTMENT',
       date: json['date'] ?? '',
       isRead: json['isRead'] ?? false,
     );

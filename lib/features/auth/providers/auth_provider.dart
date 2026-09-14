@@ -68,7 +68,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
     if (nameErr != null || deptErr != null || idErr != null) return false;
 
-    // Mock 인증 시도
     state = state.copyWith(isLoading: true);
     try {
       await _repository.verifyStudent(
@@ -80,11 +79,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
       await _ref.read(authSessionProvider.notifier).login();
       state = state.copyWith(isLoading: false);
       return true;
-    } catch (_) {
-      // TODO(Phase 2): API 에러 메시지를 서버 응답에서 파싱하여 표시
+    } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        studentIdError: () => '학번을 확인해주세요.',
+        studentIdError: () => e.toString().replaceFirst('Exception: ', ''),
       );
       return false;
     }

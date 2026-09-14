@@ -44,6 +44,15 @@ class _CalendarEventCard extends StatelessWidget {
   final AcademicEvent event;
   const _CalendarEventCard({required this.event});
 
+  static const _categoryLabels = {
+    'ACADEMIC': '학사',
+    'EXAM': '시험',
+    'REGISTRATION': '수강신청',
+    'VACATION': '방학',
+    'EVENT': '행사',
+    'ETC': '기타',
+  };
+
   Color _getCategoryColor() {
     switch (event.category) {
       case 'ACADEMIC':     return Colors.blue;
@@ -89,7 +98,10 @@ class _CalendarEventCard extends StatelessWidget {
                 ],
               ),
             ),
-            _CategoryBadge(category: event.category, color: _getCategoryColor()),
+            _CategoryBadge(
+              category: _categoryLabels[event.category] ?? event.category,
+              color: _getCategoryColor(),
+            ),
           ],
         ),
       ),

@@ -75,7 +75,7 @@ class CoursePickerNotifier extends StateNotifier<CoursePickerState> {
     state = state.copyWith(selectedCourseIds: newSet);
   }
 
-  Future<Map<String, int>> submitEnrollments() async {
+  Future<Map<String, dynamic>> submitEnrollments() async {
     state = state.copyWith(isSubmitting: true, errorMessage: null);
     int successCount = 0;
     int failCount = 0;
@@ -87,7 +87,7 @@ class CoursePickerNotifier extends StateNotifier<CoursePickerState> {
         successCount++;
       } catch (e) {
         failCount++;
-        lastError = e.toString();
+        lastError = e.toString().replaceFirst('Exception: ', '');
       }
     }
 
@@ -99,6 +99,7 @@ class CoursePickerNotifier extends StateNotifier<CoursePickerState> {
     return {
       'success': successCount,
       'fail': failCount,
+      'lastError': lastError.isEmpty ? null : lastError,
     };
   }
 }

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import '../../core/network/api_client.dart';
+import '../../core/network/api_exception_util.dart';
 import '../models/schedule_item.dart';
 import 'schedule_repository.dart';
 
@@ -13,15 +14,19 @@ class ApiScheduleRepository implements ScheduleRepository {
     try {
       final response = await _apiClient.dio.get('/api/schedule/me');
 
-      if (response.statusCode == 200) {
-        final List<dynamic> data = response.data;
-        return data.map((json) => ScheduleItem.fromJson(json)).toList();
+      final rawData = response.data;
+      if (rawData is! List) {
+        throw Exception('예상치 못한 응답 형식입니다.');
       }
-      return [];
+      final List<dynamic> data = rawData;
+
+      try {
+        return data.map((json) => ScheduleItem.fromJson(json)).toList();
+      } catch (e) {
+        throw Exception('데이터 형식이 올바르지 않습니다.');
+      }
     } on DioException catch (e) {
-      final data = e.response?.data;
-      final message = (data is Map && data['message'] != null) ? data['message'] as String : '시간표 정보 불러오기 실패: ${e.message}';
-      throw Exception(message);
+      throw Exception(extractErrorMessage(e, '시간표 정보 불러오기 실패: ${e.message}'));
     }
   }
 }

@@ -7,25 +7,29 @@ import '../../../data/repositories/notice_repository.dart';
 import '../../../shared/providers/app_providers.dart';
 
 class HomeState {
-  final int selectedTabIndex; // 0=공지사항, 1=학과소식, 2=학과공지, 3=장학·취업
+  final int selectedTabIndex; // 0=학사, 1=학과공지, 2=행사, 3=장학금, 4=취업
   final List<NoticeItem> notices;
   final bool isLoading;
+  final String? errorMessage;
 
   const HomeState({
     this.selectedTabIndex = 0,
     this.notices = const [],
     this.isLoading = false,
+    this.errorMessage,
   });
 
   HomeState copyWith({
     int? selectedTabIndex,
     List<NoticeItem>? notices,
     bool? isLoading,
+    String? errorMessage,
   }) =>
       HomeState(
         selectedTabIndex: selectedTabIndex ?? this.selectedTabIndex,
         notices: notices ?? this.notices,
         isLoading: isLoading ?? this.isLoading,
+        errorMessage: errorMessage,
       );
 }
 
@@ -39,13 +43,12 @@ class HomeNotifier extends StateNotifier<HomeState> {
   void selectTab(int index) => state = state.copyWith(selectedTabIndex: index);
 
   Future<void> fetchNotices() async {
-    state = state.copyWith(isLoading: true);
+    state = state.copyWith(isLoading: true, errorMessage: null);
     try {
       final notices = await _noticeRepository.getNotices();
       state = state.copyWith(notices: notices, isLoading: false);
     } catch (e) {
-      state = state.copyWith(isLoading: false);
-      // 에러 처리는 필요에 따라 추가
+      state = state.copyWith(isLoading: false, errorMessage: '공지사항을 불러오지 못했습니다.');
     }
   }
 }

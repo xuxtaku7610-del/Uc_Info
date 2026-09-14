@@ -74,6 +74,16 @@ class NoticeSection extends ConsumerWidget {
               padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
               child: Center(child: CircularProgressIndicator()),
             )
+          else if (state.errorMessage != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
+              child: Center(
+                child: Text(
+                  state.errorMessage!,
+                  style: AppTextStyles.body2.copyWith(color: context.textHint),
+                ),
+              ),
+            )
           else if (filtered.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),

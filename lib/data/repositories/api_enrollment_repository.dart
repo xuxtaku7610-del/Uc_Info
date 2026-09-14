@@ -2,6 +2,7 @@
 
 import 'package:dio/dio.dart';
 import '../../core/network/api_client.dart';
+import '../../core/network/api_exception_util.dart';
 import 'enrollment_repository.dart';
 
 class ApiEnrollmentRepository implements EnrollmentRepository {
@@ -16,9 +17,7 @@ class ApiEnrollmentRepository implements EnrollmentRepository {
         'courseOfferingId': courseOfferingId,
       });
     } on DioException catch (e) {
-      final data = e.response?.data;
-      final message = (data is Map && data['message'] != null) ? data['message'] as String : '수강 신청에 실패했습니다.';
-      throw Exception(message);
+      throw Exception(extractErrorMessage(e, '수강 신청에 실패했습니다.'));
     }
   }
 
@@ -27,9 +26,7 @@ class ApiEnrollmentRepository implements EnrollmentRepository {
     try {
       await _apiClient.dio.delete('/api/enrollments/$enrollmentId');
     } on DioException catch (e) {
-      final data = e.response?.data;
-      final message = (data is Map && data['message'] != null) ? data['message'] as String : '수강 취소에 실패했습니다.';
-      throw Exception(message);
+      throw Exception(extractErrorMessage(e, '수강 취소에 실패했습니다.'));
     }
   }
 }

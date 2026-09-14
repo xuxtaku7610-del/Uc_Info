@@ -60,10 +60,14 @@ class CoursePickerScreen extends ConsumerWidget {
             : () async {
                 final result = await ref.read(coursePickerProvider.notifier).submitEnrollments();
                 if (context.mounted) {
-                  final s = result['success']!;
-                  final f = result['fail']!;
+                  final s = result['success'] as int;
+                  final f = result['fail'] as int;
+                  final lastError = result['lastError'] as String?;
+                  final message = f == 0
+                      ? '신청 완료: $s개 성공'
+                      : '신청 완료: $s개 성공, $f개 실패${lastError != null ? '\n($lastError)' : ''}';
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('신청 완료: $s개 성공, $f개 실패')),
+                    SnackBar(content: Text(message)),
                   );
                   if (f == 0) Navigator.pop(context);
                 }

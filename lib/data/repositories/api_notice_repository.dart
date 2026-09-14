@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import '../../core/network/api_client.dart';
+import '../../core/network/api_exception_util.dart';
 import '../models/notice_item.dart';
 import 'notice_repository.dart';
 
@@ -13,15 +14,19 @@ class ApiNoticeRepository implements NoticeRepository {
     try {
       final response = await _apiClient.dio.get('/api/notices');
 
-      if (response.statusCode == 200) {
-        final List<dynamic> data = response.data;
-        return data.map((json) => NoticeItem.fromJson(json)).toList();
+      final rawData = response.data;
+      if (rawData is! List) {
+        throw Exception('예상치 못한 응답 형식입니다.');
       }
-      return [];
+      final List<dynamic> data = rawData;
+
+      try {
+        return data.map((json) => NoticeItem.fromJson(json)).toList();
+      } catch (e) {
+        throw Exception('데이터 형식이 올바르지 않습니다.');
+      }
     } on DioException catch (e) {
-      final data = e.response?.data;
-      final message = (data is Map && data['message'] != null) ? data['message'] as String : '공지사항 목록 불러오기 실패: ${e.message}';
-      throw Exception(message);
+      throw Exception(extractErrorMessage(e, '공지사항 목록 불러오기 실패: ${e.message}'));
     }
   }
 
@@ -30,14 +35,9 @@ class ApiNoticeRepository implements NoticeRepository {
     try {
       final response = await _apiClient.dio.get('/api/notices/$id');
 
-      if (response.statusCode == 200) {
-        return NoticeItem.fromJson(response.data);
-      }
-      throw Exception('데이터 없음');
+      return NoticeItem.fromJson(response.data);
     } on DioException catch (e) {
-      final data = e.response?.data;
-      final message = (data is Map && data['message'] != null) ? data['message'] as String : '공지사항 상세 불러오기 실패: ${e.message}';
-      throw Exception(message);
+      throw Exception(extractErrorMessage(e, '공지사항 상세 불러오기 실패: ${e.message}'));
     }
   }
 
@@ -49,9 +49,7 @@ class ApiNoticeRepository implements NoticeRepository {
         data: {'studentId': studentId},
       );
     } on DioException catch (e) {
-      final data = e.response?.data;
-      final message = (data is Map && data['message'] != null) ? data['message'] as String : '읽음 처리 실패: ${e.message}';
-      throw Exception(message);
+      throw Exception(extractErrorMessage(e, '읽음 처리 실패: ${e.message}'));
     }
   }
 }

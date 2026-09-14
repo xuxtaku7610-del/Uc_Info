@@ -2,6 +2,7 @@
 
 import 'package:dio/dio.dart';
 import '../../core/network/api_client.dart';
+import '../../core/network/api_exception_util.dart';
 import '../models/banner_item.dart';
 import 'banner_repository.dart';
 
@@ -15,15 +16,19 @@ class ApiBannerRepository implements BannerRepository {
     try {
       final response = await _apiClient.dio.get('/api/banners');
 
-      if (response.statusCode == 200) {
-        final List<dynamic> data = response.data;
-        return data.map((json) => BannerItem.fromJson(json)).toList();
+      final rawData = response.data;
+      if (rawData is! List) {
+        throw Exception('예상치 못한 응답 형식입니다.');
       }
-      return [];
+      final List<dynamic> data = rawData;
+
+      try {
+        return data.map((json) => BannerItem.fromJson(json)).toList();
+      } catch (e) {
+        throw Exception('데이터 형식이 올바르지 않습니다.');
+      }
     } on DioException catch (e) {
-      final data = e.response?.data;
-      final message = (data is Map && data['message'] != null) ? data['message'] as String : '배너 정보를 불러오지 못했습니다.';
-      throw Exception(message);
+      throw Exception(extractErrorMessage(e, '배너 정보를 불러오지 못했습니다.'));
     }
   }
 }
