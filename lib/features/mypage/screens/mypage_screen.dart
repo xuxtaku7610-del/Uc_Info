@@ -10,7 +10,9 @@ import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
 import 'package:university_portal_flutter/data/models/user.dart';
 import 'package:university_portal_flutter/features/auth/providers/auth_session_provider.dart';
 import 'package:university_portal_flutter/features/auth/providers/user_provider.dart';
+import 'package:university_portal_flutter/features/home/widgets/student_banner.dart';
 import 'package:university_portal_flutter/features/settings/providers/settings_provider.dart';
+import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 
 class MypageScreen extends ConsumerWidget {
   const MypageScreen({super.key});
@@ -347,7 +349,12 @@ class _StudentCard extends StatelessWidget {
             width: double.infinity,
             child: OutlinedButton(
               onPressed: () {
-                // TODO(Phase 2): QR 화면으로 이동
+                final currentUser = userState.user;
+                if (currentUser == null) return;
+                showAppBottomSheet<void>(
+                  context,
+                  (_) => StudentIdSheet(user: currentUser),
+                );
               },
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.primary,

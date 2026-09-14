@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
+import 'package:university_portal_flutter/core/constants/app_constants.dart';
 import 'package:university_portal_flutter/data/models/schedule_item.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 import 'package:university_portal_flutter/shared/providers/app_providers.dart';
@@ -39,7 +40,7 @@ class TimetableSheet extends ConsumerWidget {
                 children: [
                   Text('주간 시간표', style: AppTextStyles.heading2),
                   const Spacer(),
-                  const Text('2026학년도 1학기', style: AppTextStyles.caption),
+                  const Text(AppConstants.currentSemesterLabel, style: AppTextStyles.caption),
                 ],
               ),
             ),
@@ -145,8 +146,8 @@ class _TimetableGrid extends ConsumerWidget {
 
   static const timeColWidth = 44.0;
   static const cellHeight = 54.0;
-  static const startHour = 9;
-  static const endHour = 18;
+  static const startHour = 8;
+  static const endHour = 21;
   static const days = ['월', '화', '수', '목', '금'];
 
   @override
@@ -205,6 +206,10 @@ class _TimetableGrid extends ConsumerWidget {
               ...schedule.map((item) {
                 final dayIndex = days.indexOf(item.day);
                 if (dayIndex == -1) return const SizedBox.shrink();
+                
+                if (item.startHour < startHour || item.endHour > endHour) {
+                  return const SizedBox.shrink(); // 그리드 범위를 벗어나는 데이터는 렌더링하지 않음
+                }
 
                 final colorIndex =
                     item.color % AppColors.timetableColors.length;

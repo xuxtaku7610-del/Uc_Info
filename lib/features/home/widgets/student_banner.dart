@@ -81,15 +81,15 @@ class StudentBanner extends StatelessWidget {
   void _showStudentId(BuildContext context) {
     showAppBottomSheet<void>(
       context,
-      (_) => _StudentIdSheet(user: user),
+      (_) => StudentIdSheet(user: user),
     );
   }
 }
 
-class _StudentIdSheet extends StatelessWidget {
+class StudentIdSheet extends StatelessWidget {
   final User user;
 
-  const _StudentIdSheet({required this.user});
+  const StudentIdSheet({required this.user});
 
   @override
   Widget build(BuildContext context) {
