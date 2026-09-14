@@ -176,12 +176,12 @@ class _GradeSimulatorScreenState extends State<GradeSimulatorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.background,
       appBar: AppBar(
         title: const Text('학점 시뮬레이터', style: AppTextStyles.heading2),
-        backgroundColor: AppColors.surface,
+        backgroundColor: context.surface,
         elevation: 0,
-        foregroundColor: AppColors.textPrimary,
+        foregroundColor: context.textPrimary,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -216,7 +216,7 @@ class _GradeSimulatorScreenState extends State<GradeSimulatorScreen> {
     final double targetScore = _gradeOptions[_selectedGrade]!;
 
     return Card(
-      color: AppColors.surface,
+      color: context.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
       ),
@@ -279,7 +279,7 @@ class _GradeSimulatorScreenState extends State<GradeSimulatorScreen> {
   // ── 2. 성적 입력 카드 ──────────────────────────────────────────
   Widget _buildScoreInputCard() {
     return Card(
-      color: AppColors.surface,
+      color: context.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
       ),
@@ -442,7 +442,7 @@ class _GradeSimulatorScreenState extends State<GradeSimulatorScreen> {
     }
 
     return Card(
-      color: AppColors.surface,
+      color: context.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
       ),

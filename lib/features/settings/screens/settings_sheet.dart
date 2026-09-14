@@ -59,7 +59,7 @@ class SettingsSheet extends ConsumerWidget {
               value: settings.language,
               underline: const SizedBox.shrink(),
               style: AppTextStyles.body2
-                  .copyWith(color: AppColors.textPrimary),
+                  .copyWith(color: context.textPrimary),
               onChanged: notifier.setLanguage,
               items: const [
                 DropdownMenuItem(value: '한국어', child: Text('한국어')),

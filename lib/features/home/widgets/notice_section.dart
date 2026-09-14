@@ -45,7 +45,7 @@ class NoticeSection extends ConsumerWidget {
                         bottom: BorderSide(
                           color: selected
                               ? AppColors.accent
-                              : AppColors.divider,
+                              : context.divider,
                           width: selected ? 2.5 : 1,
                         ),
                       ),
@@ -55,7 +55,7 @@ class NoticeSection extends ConsumerWidget {
                       style: AppTextStyles.label.copyWith(
                         color: selected
                             ? AppColors.primary
-                            : AppColors.textSecondary,
+                            : context.textSecondary,
                         fontWeight: selected
                             ? FontWeight.w700
                             : FontWeight.w400,
@@ -81,7 +81,7 @@ class NoticeSection extends ConsumerWidget {
                 child: Text(
                   '공지사항이 없습니다',
                   style: AppTextStyles.body2
-                      .copyWith(color: AppColors.textHint),
+                      .copyWith(color: context.textHint),
                 ),
               ),
             )
@@ -118,10 +118,10 @@ class NoticeSection extends ConsumerWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const Icon(
+                      Icon(
                         Icons.chevron_right,
                         size: 16,
-                        color: AppColors.textHint,
+                        color: context.textHint,
                       ),
                     ],
                   ),

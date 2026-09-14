@@ -57,7 +57,7 @@ class TimetableSheet extends ConsumerWidget {
                         child: Text(
                           d,
                           style: AppTextStyles.label.copyWith(
-                            color: AppColors.textSecondary,
+                            color: context.textSecondary,
                           ),
                         ),
                       ),
@@ -66,7 +66,7 @@ class TimetableSheet extends ConsumerWidget {
                 ],
               ),
             ),
-            const Divider(height: 8, color: AppColors.divider),
+            Divider(height: 8, color: context.divider),
 
             // 그리드 본문
             Expanded(
@@ -189,7 +189,7 @@ class _TimetableGrid extends ConsumerWidget {
                           decoration: BoxDecoration(
                             border: Border(
                               top: BorderSide(
-                                color: AppColors.divider,
+                                color: context.divider,
                                 width: 0.5,
                               ),
                             ),
@@ -231,10 +231,10 @@ class _TimetableGrid extends ConsumerWidget {
                         children: [
                           Text(
                             item.subject,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
+                              color: context.textPrimary,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -242,10 +242,10 @@ class _TimetableGrid extends ConsumerWidget {
                           if (height > 70)
                             Text(
                               item.room,
-                              style: const TextStyle(
-                                fontSize: 9,
-                                color: AppColors.textSecondary,
-                              ),
+                              style: TextStyle(
+                              fontSize: 9,
+                              color: context.textSecondary,
+                            ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -281,7 +281,7 @@ class _DialogRow extends StatelessWidget {
             width: 52,
             child: Text(
               label,
-              style: AppTextStyles.label.copyWith(color: AppColors.textSecondary),
+              style: AppTextStyles.label.copyWith(color: context.textSecondary),
             ),
           ),
           Expanded(

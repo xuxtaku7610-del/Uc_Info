@@ -12,7 +12,7 @@ class AppColors {
   static const Color accent     = Color(0xFFFFC72C);
   static const Color accentDark = Color(0xFFE6A800); // pressed state
 
-  // Neutral
+  // Neutral (Static Fallbacks)
   static const Color background    = Color(0xFFF4F6FA);
   static const Color surface       = Color(0xFFFFFFFF);
   static const Color divider       = Color(0xFFEAECF0);
@@ -35,4 +35,20 @@ class AppColors {
     Color(0xFFFFB4C2), // 핑크
     Color(0xFFC8F5A0), // 연두
   ];
+}
+
+extension AppColorsX on BuildContext {
+  bool get _isDark => Theme.of(this).brightness == Brightness.dark;
+
+  Color get background => _isDark ? const Color(0xFF121212) : AppColors.background;
+  Color get surface => _isDark ? const Color(0xFF1E1E1E) : AppColors.surface;
+  Color get textPrimary => _isDark ? const Color(0xFFF4F6FA) : AppColors.textPrimary;
+  Color get textSecondary => _isDark ? const Color(0xFFB0B3B8) : AppColors.textSecondary;
+  Color get textHint => _isDark ? const Color(0xFF7A7D85) : AppColors.textHint;
+  Color get divider => _isDark ? const Color(0xFF2C2C2E) : AppColors.divider;
+
+  // 브랜드 컬러도 필요한 경우 여기서 래핑 가능
+  Color get primary => AppColors.primary;
+  Color get accent => AppColors.accent;
+  Color get error => AppColors.error;
 }

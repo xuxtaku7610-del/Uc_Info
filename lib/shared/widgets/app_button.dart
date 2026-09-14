@@ -35,12 +35,12 @@ class AppButton extends StatelessWidget {
           ),
         ),
         child: isLoading
-            ? const SizedBox(
+            ? SizedBox(
                 width: 24,
                 height: 24,
                 child: CircularProgressIndicator(
                   strokeWidth: 2.5,
-                  color: AppColors.textPrimary,
+                  color: context.textPrimary,
                 ),
               )
             : Row(
@@ -48,11 +48,11 @@ class AppButton extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: AppTextStyles.buttonText.copyWith(color: AppColors.textPrimary),
+                    style: AppTextStyles.buttonText.copyWith(color: context.textPrimary),
                   ),
                   if (trailingIcon != null) ...[
                     const SizedBox(width: 4),
-                    Icon(trailingIcon, color: AppColors.textPrimary, size: 20),
+                    Icon(trailingIcon, color: context.textPrimary, size: 20),
                   ],
                 ],
               ),

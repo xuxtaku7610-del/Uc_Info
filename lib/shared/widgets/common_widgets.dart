@@ -17,7 +17,7 @@ class AppDragHandle extends StatelessWidget {
       width: 40,
       height: 4,
       decoration: BoxDecoration(
-        color: AppColors.divider,
+        color: context.divider,
         borderRadius: BorderRadius.circular(2),
       ),
     );
@@ -44,7 +44,7 @@ class AppCard extends StatelessWidget {
       height: height,
       padding: padding,
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: context.surface,
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         boxShadow: [
           BoxShadow(

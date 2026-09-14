@@ -16,12 +16,12 @@ class CoursePickerScreen extends ConsumerWidget {
     final state = ref.watch(coursePickerProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.background,
       appBar: AppBar(
         title: const Text('수강 신청', style: AppTextStyles.heading2),
-        backgroundColor: AppColors.surface,
+        backgroundColor: context.surface,
         elevation: 0,
-        foregroundColor: AppColors.textPrimary,
+        foregroundColor: context.textPrimary,
         centerTitle: true,
       ),
       body: state.isLoading
@@ -51,8 +51,8 @@ class CoursePickerScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: AppColors.surface,
-        border: Border(top: BorderSide(color: AppColors.divider)),
+        color: context.surface,
+        border: Border(top: BorderSide(color: context.divider)),
       ),
       child: ElevatedButton(
         onPressed: state.selectedCourseIds.isEmpty || state.isSubmitting

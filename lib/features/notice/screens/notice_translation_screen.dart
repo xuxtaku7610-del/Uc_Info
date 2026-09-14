@@ -85,12 +85,12 @@ class _NoticeTranslationScreenState extends State<NoticeTranslationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.background,
       appBar: AppBar(
         title: const Text('공지사항 번역', style: AppTextStyles.heading2),
-        backgroundColor: AppColors.surface,
+        backgroundColor: context.surface,
         elevation: 0,
-        foregroundColor: AppColors.textPrimary,
+        foregroundColor: context.textPrimary,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -99,7 +99,7 @@ class _NoticeTranslationScreenState extends State<NoticeTranslationScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // [A] 원본 공지사항 카드
-              _buildOriginalCard(),
+              _buildOriginalCard(context),
               const SizedBox(height: AppSpacing.md),
 
               // [B] 번역 버튼
@@ -107,7 +107,7 @@ class _NoticeTranslationScreenState extends State<NoticeTranslationScreen> {
               const SizedBox(height: AppSpacing.md),
 
               // [C] 결과 영역 (로딩 / 에러 / 번역 결과 분기)
-              _buildResultArea(),
+              _buildResultArea(context),
             ],
           ),
         ),
@@ -116,9 +116,9 @@ class _NoticeTranslationScreenState extends State<NoticeTranslationScreen> {
   }
 
   // ── [A] 원본 공지사항 카드 ──────────────────────────────────────
-  Widget _buildOriginalCard() {
+  Widget _buildOriginalCard(BuildContext context) {
     return Card(
-      color: AppColors.surface,
+      color: context.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
       ),
@@ -164,7 +164,7 @@ class _NoticeTranslationScreenState extends State<NoticeTranslationScreen> {
 
   // ── [C] 결과 영역 ──────────────────────────────────────────────
   // how: _isLoading → _errorMessage → _translatedText 순서로 분기 처리한다.
-  Widget _buildResultArea() {
+  Widget _buildResultArea(BuildContext context) {
     // 케이스 1: 번역 요청 진행 중
     if (_isLoading) {
       return const Padding(
@@ -193,7 +193,7 @@ class _NoticeTranslationScreenState extends State<NoticeTranslationScreen> {
     // 케이스 3: 번역 결과 표시
     if (_translatedText != null) {
       return Card(
-        color: AppColors.surface,
+        color: context.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         ),

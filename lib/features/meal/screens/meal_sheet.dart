@@ -65,11 +65,11 @@ class MealSheet extends ConsumerWidget {
           const SizedBox(height: AppSpacing.md),
 
           // 조식 / 중식 / 석식
-          _buildMealCard('조식', meal.breakfast),
+          _buildMealCard(context, '조식', meal.breakfast),
           const SizedBox(height: AppSpacing.sm),
-          _buildMealCard('중식', meal.lunch),
+          _buildMealCard(context, '중식', meal.lunch),
           const SizedBox(height: AppSpacing.sm),
-          _buildMealCard('석식', meal.dinner),
+          _buildMealCard(context, '석식', meal.dinner),
           const SizedBox(height: AppSpacing.md),
 
           // 알레르기 안내
@@ -86,7 +86,7 @@ class MealSheet extends ConsumerWidget {
             child: Text(
               '⚠️  알레르기 유발식품 안내: 식단에 포함된 알레르기 성분은 학생식당 게시판을 확인해주세요.',
               style:
-                  AppTextStyles.caption.copyWith(color: AppColors.textPrimary),
+                  AppTextStyles.caption.copyWith(color: context.textPrimary),
             ),
           ),
         ],
@@ -94,20 +94,20 @@ class MealSheet extends ConsumerWidget {
     );
   }
 
-  Widget _buildMealCard(String label, MealSection? section) {
+  Widget _buildMealCard(BuildContext context, String label, MealSection? section) {
     if (section == null) {
       return Container(
         width: double.infinity,
         padding: const EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
-          color: const Color(0xFFF9FAFB),
+          color: context.surface,
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-          border: Border.all(color: AppColors.divider),
+          border: Border.all(color: context.divider),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: AppTextStyles.heading3.copyWith(color: AppColors.textHint)),
+            Text(label, style: AppTextStyles.heading3.copyWith(color: context.textHint)),
             const SizedBox(height: AppSpacing.sm),
             const Text('오늘은 운영하지 않습니다.', style: AppTextStyles.body2),
           ],

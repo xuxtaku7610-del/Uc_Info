@@ -59,15 +59,15 @@ class StudentBanner extends StatelessWidget {
                   Text(
                     '모바일 학생증',
                     style: AppTextStyles.label.copyWith(
-                      color: AppColors.textPrimary,
+                      color: context.textPrimary,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   const SizedBox(width: 2),
-                  const Icon(
+                  Icon(
                     Icons.chevron_right,
                     size: 18,
-                    color: AppColors.textPrimary,
+                    color: context.textPrimary,
                   ),
                 ],
               ),
@@ -113,8 +113,8 @@ class _StudentIdSheet extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(AppSpacing.sm),
             decoration: BoxDecoration(
-              color: AppColors.surface,
-              border: Border.all(color: AppColors.divider),
+              color: context.surface,
+              border: Border.all(color: context.divider),
               borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
             ),
             child: QrImageView(
@@ -137,11 +137,11 @@ class _StudentIdSheet extends StatelessWidget {
           const SizedBox(height: AppSpacing.xs),
           Text(
             '${user.department} · ${user.year}학년',
-            style: AppTextStyles.body2.copyWith(color: AppColors.textSecondary),
+            style: AppTextStyles.body2.copyWith(color: context.textSecondary),
           ),
           Text(
             user.studentId,
-            style: AppTextStyles.body2.copyWith(color: AppColors.textSecondary),
+            style: AppTextStyles.body2.copyWith(color: context.textSecondary),
           ),
         ],
       ),

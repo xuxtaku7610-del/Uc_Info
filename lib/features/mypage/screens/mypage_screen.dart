@@ -22,7 +22,7 @@ class MypageScreen extends ConsumerWidget {
     final user = userState.user ?? User(studentId: '-', name: '사용자', department: '-', year: 1);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.background,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -76,7 +76,7 @@ class MypageScreen extends ConsumerWidget {
                   trailing: Text(
                     settings.language,
                     style: AppTextStyles.caption.copyWith(
-                      color: AppColors.textHint,
+                      color: context.textHint,
                     ),
                   ),
                 ),
@@ -126,7 +126,7 @@ class MypageScreen extends ConsumerWidget {
                   trailing: Text(
                     'v1.0.0',
                     style: AppTextStyles.caption.copyWith(
-                      color: AppColors.textHint,
+                      color: context.textHint,
                     ),
                   ),
                 ),
@@ -163,7 +163,7 @@ void _showLogoutDialog(BuildContext context, WidgetRef ref) {
           onPressed: () => Navigator.pop(context),
           child: Text(
             '취소',
-            style: TextStyle(color: AppColors.textSecondary),
+            style: TextStyle(color: context.textSecondary),
           ),
         ),
         TextButton(
@@ -198,10 +198,10 @@ class _SectionHeader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
       child: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w500,
-          color: AppColors.textHint,
+          color: context.textHint,
           letterSpacing: 0.5,
         ),
       ),
@@ -247,8 +247,8 @@ class _MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconColor = isDestructive ? AppColors.error : AppColors.textHint;
-    final labelColor = isDestructive ? AppColors.error : AppColors.textPrimary;
+    final iconColor = isDestructive ? AppColors.error : context.textHint;
+    final labelColor = isDestructive ? AppColors.error : context.textPrimary;
 
     return InkWell(
       onTap: onTap,
@@ -274,7 +274,7 @@ class _MenuItem extends StatelessWidget {
               if (trailing != null)
                 trailing!
               else
-                const Icon(Icons.chevron_right, size: 18, color: AppColors.textHint),
+                Icon(Icons.chevron_right, size: 18, color: context.textHint),
             ],
           ),
         ),
@@ -352,14 +352,14 @@ class _StudentCard extends StatelessWidget {
                   Text(
                     '${user.department} ${user.year}학년',
                     style: AppTextStyles.body2.copyWith(
-                      color: AppColors.textSecondary,
+                      color: context.textSecondary,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     user.studentId,
                     style: AppTextStyles.caption.copyWith(
-                      color: AppColors.textHint,
+                      color: context.textHint,
                     ),
                   ),
                 ],

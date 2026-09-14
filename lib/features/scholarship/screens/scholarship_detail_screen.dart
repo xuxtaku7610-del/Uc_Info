@@ -20,12 +20,12 @@ class ScholarshipDetailScreen extends ConsumerWidget {
     final repo = ref.watch(scholarshipRepositoryProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.background,
       appBar: AppBar(
         title: const Text('장학금 상세', style: AppTextStyles.heading2),
-        backgroundColor: AppColors.surface,
+        backgroundColor: context.surface,
         elevation: 0,
-        foregroundColor: AppColors.textPrimary,
+        foregroundColor: context.textPrimary,
       ),
       body: FutureBuilder<Scholarship>(
         future: repo.getScholarshipDetail(scholarshipId),
@@ -46,14 +46,14 @@ class ScholarshipDetailScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildBadge(s.type),
+                _buildBadge(context, s.type),
                 const SizedBox(height: AppSpacing.sm),
                 Text(s.title, style: AppTextStyles.heading1),
                 const SizedBox(height: AppSpacing.lg),
                 const Divider(),
                 const SizedBox(height: AppSpacing.md),
-                _buildInfoRow('신청 마감일', deadlineStr),
-                _buildInfoRow('장학 유형', s.type),
+                _buildInfoRow(context, '신청 마감일', deadlineStr),
+                _buildInfoRow(context, '장학 유형', s.type),
                 const SizedBox(height: AppSpacing.xl),
                 const Text(
                   '상세 모집 요강은 학교 홈페이지 및 장학 공지사항을 확인해 주시기 바랍니다.',
@@ -67,7 +67,7 @@ class ScholarshipDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildBadge(String type) {
+  Widget _buildBadge(BuildContext context, String type) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -81,12 +81,12 @@ class ScholarshipDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildInfoRow(BuildContext context, String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          SizedBox(width: 100, child: Text(label, style: AppTextStyles.label.copyWith(color: AppColors.textSecondary))),
+          SizedBox(width: 100, child: Text(label, style: AppTextStyles.label.copyWith(color: context.textSecondary))),
           Text(value, style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold)),
         ],
       ),

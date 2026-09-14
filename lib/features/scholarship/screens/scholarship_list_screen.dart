@@ -25,18 +25,18 @@ class ScholarshipListScreen extends ConsumerWidget {
     final state = ref.watch(scholarshipListProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.background,
       appBar: AppBar(
         title: const Text('장학금 안내', style: AppTextStyles.heading2),
-        backgroundColor: AppColors.surface,
+        backgroundColor: context.surface,
         elevation: 0,
-        foregroundColor: AppColors.textPrimary,
+        foregroundColor: context.textPrimary,
         centerTitle: true,
       ),
       body: Column(
         children: [
           // 필터 탭
-          _buildFilterTabs(ref, state.selectedType),
+          _buildFilterTabs(context, ref, state.selectedType),
           
           Expanded(
             child: state.isLoading
@@ -56,9 +56,9 @@ class ScholarshipListScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildFilterTabs(WidgetRef ref, String? selectedType) {
+  Widget _buildFilterTabs(BuildContext context, WidgetRef ref, String? selectedType) {
     return Container(
-      color: AppColors.surface,
+      color: context.surface,
       height: 48,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -75,7 +75,7 @@ class ScholarshipListScreen extends ConsumerWidget {
               onSelected: (_) => ref.read(scholarshipListProvider.notifier).selectType(type['value'] as String?),
               selectedColor: AppColors.primary,
               labelStyle: TextStyle(
-                color: isSelected ? Colors.white : AppColors.textPrimary,
+                color: isSelected ? Colors.white : context.textPrimary,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
@@ -122,13 +122,13 @@ class _ScholarshipCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: isExpired ? AppColors.divider : AppColors.accent,
+                  color: isExpired ? context.divider : AppColors.accent,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                 ),
                 child: Text(
                   isExpired ? '마감' : 'D-$dDay',
                   style: AppTextStyles.label.copyWith(
-                    color: isExpired ? AppColors.textHint : AppColors.textPrimary,
+                    color: isExpired ? context.textHint : context.textPrimary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

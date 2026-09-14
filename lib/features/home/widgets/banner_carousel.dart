@@ -68,7 +68,7 @@ class _BannerCarouselState extends ConsumerState<BannerCarousel> {
                 shape: BoxShape.circle,
                 color: _currentPage == index
                     ? AppColors.primary
-                    : AppColors.divider,
+                    : context.divider,
               ),
             ),
           ),
@@ -127,7 +127,7 @@ class _BannerCarouselState extends ConsumerState<BannerCarousel> {
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       decoration: BoxDecoration(
-        color: AppColors.divider.withValues(alpha: 0.3),
+        color: context.divider.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
       ),
       child: const Center(

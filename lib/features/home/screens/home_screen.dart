@@ -24,7 +24,7 @@ class HomeScreen extends ConsumerWidget {
     final userState = ref.watch(userProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.background,
       appBar: UCHeader(
         showSettings: true,
         onSettingsTap: () => showAppBottomSheet<void>(

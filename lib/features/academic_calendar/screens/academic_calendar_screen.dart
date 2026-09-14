@@ -17,12 +17,12 @@ class AcademicCalendarScreen extends ConsumerWidget {
     final state = ref.watch(academicCalendarProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.background,
       appBar: AppBar(
         title: const Text('학사일정', style: AppTextStyles.heading2),
-        backgroundColor: AppColors.surface,
+        backgroundColor: context.surface,
         elevation: 0,
-        foregroundColor: AppColors.textPrimary,
+        foregroundColor: context.textPrimary,
         centerTitle: true,
       ),
       body: state.isLoading
@@ -85,7 +85,7 @@ class _CalendarEventCard extends StatelessWidget {
                 children: [
                   Text(event.title, style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 4),
-                  Text(dateText, style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary)),
+                  Text(dateText, style: AppTextStyles.caption.copyWith(color: context.textSecondary)),
                 ],
               ),
             ),

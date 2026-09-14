@@ -65,19 +65,19 @@ class _NoticeDetailScreenState extends ConsumerState<NoticeDetailScreen> {
     final label = _categoryLabels[notice.category] ?? notice.category;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.background,
       appBar: AppBar(
-        backgroundColor: AppColors.surface,
+        backgroundColor: context.surface,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new, size: 20),
-          color: AppColors.textPrimary,
+          color: context.textPrimary,
           onPressed: () => context.pop(),
         ),
         title: Text(
           '공지사항',
-          style: AppTextStyles.heading3.copyWith(color: AppColors.textPrimary),
+          style: AppTextStyles.heading3.copyWith(color: context.textPrimary),
         ),
         centerTitle: true,
       ),
@@ -116,7 +116,7 @@ class _NoticeDetailScreenState extends ConsumerState<NoticeDetailScreen> {
             Text(notice.title, style: AppTextStyles.heading2),
             const SizedBox(height: AppSpacing.md),
 
-            const Divider(color: AppColors.divider),
+            const Divider(color: Colors.grey),
             const SizedBox(height: AppSpacing.md),
 
             // 본문
@@ -124,7 +124,7 @@ class _NoticeDetailScreenState extends ConsumerState<NoticeDetailScreen> {
               notice.content,
               style: AppTextStyles.body1.copyWith(
                 height: 1.7,
-                color: AppColors.textPrimary,
+                color: context.textPrimary,
               ),
             ),
             const SizedBox(height: AppSpacing.lg),

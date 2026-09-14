@@ -14,11 +14,11 @@ class ShortcutGrid extends StatelessWidget {
   static const _items = [
     _ShortcutItem('홈페이지',    Icons.language,             url: 'https://www.uc.ac.kr'),
     _ShortcutItem('도서관',      Icons.local_library_outlined, url: 'https://lib.uc.ac.kr'),
-    _ShortcutItem('학사 시스템', Icons.school_outlined,        url: 'https://hak.uc.ac.kr'),
+    _ShortcutItem('학사 시스템', Icons.school_outlined,        url: 'https://portal.uc.ac.kr/common/login/login.do'),
     _ShortcutItem('학사일정',    Icons.calendar_month_outlined, route: '/academic-calendar'),
     _ShortcutItem('장학안내',    Icons.card_membership_outlined, route: '/scholarships'),
     _ShortcutItem('수강신청',    Icons.add_task_outlined,      route: '/course-picker'),
-    _ShortcutItem('클로버',      Icons.computer),
+    _ShortcutItem('클로버',      Icons.computer, url: 'https://clover.uc.ac.kr/clientMain/a/t/main.do'),
     _ShortcutItem('캠퍼스 맵',   Icons.map_outlined),
   ];
 
@@ -105,7 +105,7 @@ class _ShortcutButton extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
             style: AppTextStyles.caption.copyWith(
-              color: AppColors.textPrimary,
+              color: context.textPrimary,
               fontSize: 12,
             ),
           ),

@@ -26,8 +26,20 @@ final apiClientProvider = Provider<ApiClient>((ref) => ApiClient());
 
 // 2. Auth Repository Provider
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  return ApiAuthRepository(ref.watch(apiClientProvider));
+  // return ApiAuthRepository(ref.watch(apiClientProvider));
+  return MockAuthRepository(); // 임시 더미 로그인 활성화
 });
+
+// 간단한 더미 로그인용 Mock 클래스
+class MockAuthRepository implements AuthRepository {
+  @override
+  Future<User> verifyStudent({required String name, required String department, required String studentId}) async {
+    // 아무 값이나 입력해도 7자리 숫자이기만 하면 로그인 성공 처리
+    return User(studentId: studentId, name: name, department: department, year: 1);
+  }
+  @override
+  Future<User?> getMe() async => User(studentId: '2024001', name: '테스터', department: '컴퓨터공학', year: 1);
+}
 
 // 3. Notice Repository Provider (API 연결 완료)
 final noticeRepositoryProvider = Provider<NoticeRepository>((ref) {

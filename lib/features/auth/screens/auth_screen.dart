@@ -50,7 +50,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     final state = ref.watch(authProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.background,
       appBar: const UCHeader(),           // 설정 아이콘 없음
       body: SafeArea(
         child: SingleChildScrollView(
@@ -71,7 +71,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               Container(
                 padding: const EdgeInsets.all(AppSpacing.md),
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: context.surface,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                   boxShadow: [
                     BoxShadow(
@@ -258,7 +258,7 @@ class _BulletItem extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: AppTextStyles.body2.copyWith(color: AppColors.textPrimary),
+              style: AppTextStyles.body2.copyWith(color: context.textPrimary),
             ),
           ),
         ],
