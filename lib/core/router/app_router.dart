@@ -9,6 +9,7 @@ import 'package:university_portal_flutter/features/auth/screens/auth_screen.dart
 import 'package:university_portal_flutter/features/grade_simulator/screens/grade_simulator_screen.dart';
 import 'package:university_portal_flutter/features/home/screens/home_screen.dart';
 import 'package:university_portal_flutter/features/mypage/screens/mypage_screen.dart';
+import 'package:university_portal_flutter/features/mypage/screens/privacy_policy_screen.dart';
 import 'package:university_portal_flutter/features/notice/screens/notice_detail_screen.dart';
 import 'package:university_portal_flutter/features/notice/screens/notice_translation_screen.dart';
 import 'package:university_portal_flutter/data/models/notice_item.dart';
@@ -51,6 +52,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/auth', builder: (_, _) => const AuthScreen()),
       GoRoute(path: '/home', builder: (_, _) => const HomeScreen()),
       GoRoute(path: '/mypage', builder: (_, _) => const MypageScreen()),
+      GoRoute(path: '/privacy-policy', builder: (_, __) => const PrivacyPolicyScreen()),
       GoRoute(path: '/grade-simulator', builder: (_, _) => const GradeSimulatorScreen()),
       GoRoute(path: '/academic-calendar', builder: (_, _) => const AcademicCalendarScreen()),
       GoRoute(path: '/scholarships', builder: (_, _) => const ScholarshipListScreen()),

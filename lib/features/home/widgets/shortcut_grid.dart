@@ -19,7 +19,6 @@ class ShortcutGrid extends StatelessWidget {
     _ShortcutItem('장학안내',    Icons.card_membership_outlined, route: '/scholarships'),
     _ShortcutItem('수강신청',    Icons.add_task_outlined,      route: '/course-picker'),
     _ShortcutItem('클로버',      Icons.computer, url: 'https://clover.uc.ac.kr/clientMain/a/t/main.do'),
-    _ShortcutItem('캠퍼스 맵',   Icons.map_outlined),
   ];
 
   @override

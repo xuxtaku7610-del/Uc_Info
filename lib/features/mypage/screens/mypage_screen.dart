@@ -38,21 +38,9 @@ class MypageScreen extends ConsumerWidget {
               const _SectionHeader(title: '학사 정보'),
               _MenuCard(children: [
                 _MenuItem(
-                  icon: Icons.person_outline,
-                  label: '학적 정보 조회',
-                  onTap: () {},
-                ),
-                const _ItemDivider(),
-                _MenuItem(
-                  icon: Icons.library_books_outlined,
-                  label: '수강 신청 현황',
-                  onTap: () {},
-                ),
-                const _ItemDivider(),
-                _MenuItem(
                   icon: Icons.bar_chart_outlined,
                   label: '성적 확인',
-                  onTap: () {},
+                  onTap: () => context.push('/grade-simulator'),
                 ),
               ]),
 
@@ -97,27 +85,15 @@ class MypageScreen extends ConsumerWidget {
               const _SectionHeader(title: '기타'),
               _MenuCard(children: [
                 _MenuItem(
-                  icon: Icons.campaign_outlined,
-                  label: '공지사항',
-                  onTap: () {},
-                ),
-                const _ItemDivider(),
-                _MenuItem(
                   icon: Icons.translate,
                   label: '공지사항 번역',
                   onTap: () => context.push('/notice/translation'),
                 ),
                 const _ItemDivider(),
                 _MenuItem(
-                  icon: Icons.description_outlined,
-                  label: '이용약관',
-                  onTap: () {},
-                ),
-                const _ItemDivider(),
-                _MenuItem(
                   icon: Icons.privacy_tip_outlined,
                   label: '개인정보처리방침',
-                  onTap: () {},
+                  onTap: () => context.push('/privacy-policy'),
                 ),
                 const _ItemDivider(),
                 _MenuItem(
