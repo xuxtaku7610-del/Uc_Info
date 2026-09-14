@@ -1,8 +1,7 @@
 // lib/features/home/widgets/shortcut_grid.dart
-// 역할: 바로가기 4×2 그리드 (8개 항목). url이 있는 항목은 외부 브라우저로 열고,
-//       없는 항목(Phase 2 예정)은 SnackBar로 안내한다.
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
@@ -16,11 +15,11 @@ class ShortcutGrid extends StatelessWidget {
     _ShortcutItem('홈페이지',    Icons.language,             url: 'https://www.uc.ac.kr'),
     _ShortcutItem('도서관',      Icons.local_library_outlined, url: 'https://lib.uc.ac.kr'),
     _ShortcutItem('학사 시스템', Icons.school_outlined,        url: 'https://hak.uc.ac.kr'),
-    _ShortcutItem('온라인 출결', Icons.how_to_reg_outlined),   // Phase 2
-    _ShortcutItem('통학버스',    Icons.directions_bus_outlined), // Phase 2
-    _ShortcutItem('학생 생활관', Icons.apartment),             // Phase 2
-    _ShortcutItem('클로버 시스템', Icons.computer),            // Phase 2
-    _ShortcutItem('캠퍼스 맵',   Icons.map_outlined),          // Phase 2
+    _ShortcutItem('학사일정',    Icons.calendar_month_outlined, route: '/academic-calendar'),
+    _ShortcutItem('장학안내',    Icons.card_membership_outlined, route: '/scholarships'),
+    _ShortcutItem('수강신청',    Icons.add_task_outlined,      route: '/course-picker'),
+    _ShortcutItem('클로버',      Icons.computer),
+    _ShortcutItem('캠퍼스 맵',   Icons.map_outlined),
   ];
 
   @override
@@ -40,7 +39,7 @@ class ShortcutGrid extends StatelessWidget {
               crossAxisCount: 4,
               crossAxisSpacing: AppSpacing.sm,
               mainAxisSpacing: AppSpacing.sm,
-              childAspectRatio: 0.75, // 0.9 → 0.75: 셀 높이 증가
+              childAspectRatio: 0.75,
             ),
             itemBuilder: (context, index) =>
                 _ShortcutButton(item: _items[index]),
@@ -54,9 +53,10 @@ class ShortcutGrid extends StatelessWidget {
 class _ShortcutItem {
   final String label;
   final IconData icon;
-  final String? url; // null이면 Phase 2 예정 항목
+  final String? url;
+  final String? route;
 
-  const _ShortcutItem(this.label, this.icon, {this.url});
+  const _ShortcutItem(this.label, this.icon, {this.url, this.route});
 }
 
 class _ShortcutButton extends StatelessWidget {
@@ -65,26 +65,19 @@ class _ShortcutButton extends StatelessWidget {
   const _ShortcutButton({required this.item});
 
   Future<void> _handleTap(BuildContext context) async {
-    if (item.url != null) {
-      // url이 있는 항목: 앱 내 웹뷰로 열기 (에뮬레이터에서 Chrome 로그인 불필요)
+    if (item.route != null) {
+      context.push(item.route!);
+    } else if (item.url != null) {
       final uri = Uri.parse(item.url!);
       final opened = await launchUrl(uri, mode: LaunchMode.inAppWebView);
       if (!opened && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${item.label} 페이지를 열 수 없습니다.'),
-            behavior: SnackBarBehavior.floating,
-          ),
+          SnackBar(content: Text('${item.label} 페이지를 열 수 없습니다.')),
         );
       }
     } else {
-      // url이 없는 항목: Phase 2 안내
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${item.label} — Phase 2에서 연결 예정입니다.'),
-          duration: const Duration(seconds: 2),
-          behavior: SnackBarBehavior.floating,
-        ),
+        SnackBar(content: Text('${item.label} — 연결 예정입니다.')),
       );
     }
   }
@@ -98,12 +91,12 @@ class _ShortcutButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(AppSpacing.sm + 4), // 8 → 12
+            padding: const EdgeInsets.all(AppSpacing.sm + 4),
             decoration: BoxDecoration(
               color: AppColors.primaryLight,
               borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
             ),
-            child: Icon(item.icon, color: AppColors.primary, size: 26), // 22 → 26
+            child: Icon(item.icon, color: AppColors.primary, size: 26),
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
@@ -113,7 +106,7 @@ class _ShortcutButton extends StatelessWidget {
             textAlign: TextAlign.center,
             style: AppTextStyles.caption.copyWith(
               color: AppColors.textPrimary,
-              fontSize: 12, // 11 → 12
+              fontSize: 12,
             ),
           ),
         ],

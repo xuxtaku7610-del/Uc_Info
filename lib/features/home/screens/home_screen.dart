@@ -10,6 +10,7 @@ import 'package:university_portal_flutter/features/home/widgets/notice_section.d
 import 'package:university_portal_flutter/features/home/widgets/quick_action_section.dart';
 import 'package:university_portal_flutter/features/home/widgets/shortcut_grid.dart';
 import 'package:university_portal_flutter/features/home/widgets/student_banner.dart';
+import 'package:university_portal_flutter/features/home/widgets/banner_carousel.dart';
 import 'package:university_portal_flutter/features/auth/providers/user_provider.dart';
 import 'package:university_portal_flutter/features/settings/screens/settings_sheet.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
@@ -51,6 +52,10 @@ class HomeScreen extends ConsumerWidget {
                 StudentBanner(user: userState.user!)
               else
                 const SizedBox(height: AppSpacing.sm),
+
+              // ── 1-1. 공지 배너 캐러셀
+              const SizedBox(height: AppSpacing.md),
+              const BannerCarousel(),
 
               // ── 2. 빠른 실행 (시간표 · 식단표)
               const SizedBox(height: AppSpacing.lg),

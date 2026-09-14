@@ -8,6 +8,7 @@ import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
 import 'package:university_portal_flutter/data/models/schedule_item.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
+import 'package:university_portal_flutter/shared/providers/app_providers.dart';
 import '../providers/timetable_provider.dart';
 
 class TimetableSheet extends ConsumerWidget {
@@ -95,7 +96,7 @@ class TimetableSheet extends ConsumerWidget {
 }
 
 // 과목 블록 탭 시 상세 다이얼로그 표시
-void _showCourseDialog(BuildContext context, ScheduleItem item) {
+void _showCourseDialog(BuildContext context, WidgetRef ref, ScheduleItem item) {
   final timeText = '${item.day}요일  ${item.startHour}:00 ~ ${item.endHour}:00';
 
   showDialog<void>(
@@ -111,6 +112,23 @@ void _showCourseDialog(BuildContext context, ScheduleItem item) {
         ],
       ),
       actions: [
+        if (item.enrollmentId != null)
+          TextButton(
+            onPressed: () async {
+              try {
+                await ref.read(enrollmentRepositoryProvider).unenroll(item.enrollmentId!);
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                  ref.invalidate(timetableProvider);
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+                }
+              }
+            },
+            child: const Text('수강 취소', style: TextStyle(color: AppColors.error)),
+          ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('닫기'),
@@ -120,7 +138,7 @@ void _showCourseDialog(BuildContext context, ScheduleItem item) {
   );
 }
 
-class _TimetableGrid extends StatelessWidget {
+class _TimetableGrid extends ConsumerWidget {
   final List<ScheduleItem> schedule;
 
   const _TimetableGrid({required this.schedule});
@@ -132,7 +150,7 @@ class _TimetableGrid extends StatelessWidget {
   static const days = ['월', '화', '수', '목', '금'];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final totalHours = endHour - startHour;
 
     return LayoutBuilder(
@@ -143,7 +161,7 @@ class _TimetableGrid extends StatelessWidget {
           height: totalHours * cellHeight,
           child: Stack(
             children: [
-              // 시간 눈금 + 수평선
+              // ... (시간 눈금 로직 유지)
               ...List.generate(totalHours, (i) {
                 final hour = startHour + i;
                 return Positioned(
@@ -201,7 +219,7 @@ class _TimetableGrid extends StatelessWidget {
                   width: colWidth - 4,
                   height: height,
                   child: GestureDetector(
-                    onTap: () => _showCourseDialog(context, item),
+                    onTap: () => _showCourseDialog(context, ref, item),
                     child: Container(
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(

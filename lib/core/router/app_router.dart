@@ -12,6 +12,10 @@ import 'package:university_portal_flutter/features/mypage/screens/mypage_screen.
 import 'package:university_portal_flutter/features/notice/screens/notice_detail_screen.dart';
 import 'package:university_portal_flutter/features/notice/screens/notice_translation_screen.dart';
 import 'package:university_portal_flutter/data/models/notice_item.dart';
+import 'package:university_portal_flutter/features/academic_calendar/screens/academic_calendar_screen.dart';
+import 'package:university_portal_flutter/features/scholarship/screens/scholarship_list_screen.dart';
+import 'package:university_portal_flutter/features/scholarship/screens/scholarship_detail_screen.dart';
+import 'package:university_portal_flutter/features/enrollment/screens/course_picker_screen.dart';
 
 // GoRouter는 Listenable만 수신 가능 → Riverpod 상태 변화를 ChangeNotifier로 브릿지
 class _RouterNotifier extends ChangeNotifier {
@@ -48,6 +52,16 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/home', builder: (_, _) => const HomeScreen()),
       GoRoute(path: '/mypage', builder: (_, _) => const MypageScreen()),
       GoRoute(path: '/grade-simulator', builder: (_, _) => const GradeSimulatorScreen()),
+      GoRoute(path: '/academic-calendar', builder: (_, _) => const AcademicCalendarScreen()),
+      GoRoute(path: '/scholarships', builder: (_, _) => const ScholarshipListScreen()),
+      GoRoute(path: '/course-picker', builder: (_, _) => const CoursePickerScreen()),
+      GoRoute(
+        path: '/scholarship/:id',
+        builder: (_, state) {
+          final id = int.parse(state.pathParameters['id']!);
+          return ScholarshipDetailScreen(scholarshipId: id);
+        },
+      ),
       GoRoute(
         path: '/notice/translation',
         builder: (_, _) => const NoticeTranslationScreen(),
