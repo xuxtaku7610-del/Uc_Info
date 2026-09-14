@@ -95,7 +95,7 @@ class _NoticeDetailScreenState extends ConsumerState<NoticeDetailScreen> {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryLight,
+                    color: context.primaryTint,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   ),
                   child: Text(

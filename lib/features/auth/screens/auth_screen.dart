@@ -211,9 +211,9 @@ class _NoticeCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: AppColors.primaryLight,
+        color: context.primaryTint,
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+        border: Border.all(color: context.primaryTintBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

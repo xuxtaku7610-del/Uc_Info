@@ -47,6 +47,11 @@ extension AppColorsX on BuildContext {
   Color get textHint => _isDark ? const Color(0xFF7A7D85) : AppColors.textHint;
   Color get divider => _isDark ? const Color(0xFF2C2C2E) : AppColors.divider;
 
+  // 브랜드 컬러가 은은하게 깔린 카드/배지 배경 (안내문구, 아이콘 배지 등)
+  Color get primaryTint => _isDark ? const Color(0xFF1B2540) : AppColors.primaryLight;
+  // primaryTint 배경 위에 쓸 테두리색
+  Color get primaryTintBorder => AppColors.primary.withValues(alpha: _isDark ? 0.35 : 0.2);
+
   // 브랜드 컬러도 필요한 경우 여기서 래핑 가능
   Color get primary => AppColors.primary;
   Color get accent => AppColors.accent;

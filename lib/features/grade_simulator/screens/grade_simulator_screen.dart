@@ -258,8 +258,9 @@ class _GradeSimulatorScreenState extends State<GradeSimulatorScreen> {
                     vertical: AppSpacing.xs,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryLight,
+                    color: context.primaryTint,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                    border: Border.all(color: context.primaryTintBorder),
                   ),
                   child: Text(
                     '${targetScore.toStringAsFixed(0)}점',

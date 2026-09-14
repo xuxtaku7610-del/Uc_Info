@@ -71,7 +71,7 @@ class ScholarshipDetailScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.primaryLight,
+        color: context.primaryTint,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
       ),
       child: Text(

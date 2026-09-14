@@ -349,11 +349,9 @@ class _StudentCard extends StatelessWidget {
             width: double.infinity,
             child: OutlinedButton(
               onPressed: () {
-                final currentUser = userState.user;
-                if (currentUser == null) return;
                 showAppBottomSheet<void>(
                   context,
-                  (_) => StudentIdSheet(user: currentUser),
+                  (_) => StudentIdSheet(user: user),
                 );
               },
               style: OutlinedButton.styleFrom(

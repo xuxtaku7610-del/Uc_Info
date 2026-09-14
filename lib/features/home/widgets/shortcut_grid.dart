@@ -92,7 +92,7 @@ class _ShortcutButton extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(AppSpacing.sm + 4),
             decoration: BoxDecoration(
-              color: AppColors.primaryLight,
+              color: context.primaryTint,
               borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
             ),
             child: Icon(item.icon, color: AppColors.primary, size: 26),
