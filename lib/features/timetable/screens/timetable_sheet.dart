@@ -74,7 +74,20 @@ class TimetableSheet extends ConsumerWidget {
               child: state.isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : state.errorMessage != null
-                      ? Center(child: Text(state.errorMessage!))
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(state.errorMessage!),
+                              const SizedBox(height: AppSpacing.md),
+                              TextButton.icon(
+                                onPressed: () => ref.read(timetableProvider.notifier).fetchWeeklySchedule(),
+                                icon: const Icon(Icons.refresh),
+                                label: const Text('다시 시도'),
+                              ),
+                            ],
+                          ),
+                        )
                       : SingleChildScrollView(
                           controller: scrollController,
                           padding: const EdgeInsets.symmetric(

@@ -104,7 +104,7 @@ class CoursePickerNotifier extends StateNotifier<CoursePickerState> {
   }
 }
 
-final coursePickerProvider = StateNotifierProvider<CoursePickerNotifier, CoursePickerState>((ref) {
+final coursePickerProvider = StateNotifierProvider.autoDispose<CoursePickerNotifier, CoursePickerState>((ref) {
   final courseRepo = ref.watch(courseRepositoryProvider);
   final enrollmentRepo = ref.watch(enrollmentRepositoryProvider);
   return CoursePickerNotifier(courseRepo, enrollmentRepo, ref);

@@ -48,7 +48,7 @@ class MealNotifier extends StateNotifier<MealState> {
   }
 }
 
-final mealProvider = StateNotifierProvider<MealNotifier, MealState>((ref) {
+final mealProvider = StateNotifierProvider.autoDispose<MealNotifier, MealState>((ref) {
   final repository = ref.watch(mealRepositoryProvider);
   return MealNotifier(repository);
 });

@@ -52,7 +52,7 @@ class BannerNotifier extends StateNotifier<BannerState> {
   }
 }
 
-final bannerProvider = StateNotifierProvider<BannerNotifier, BannerState>((ref) {
+final bannerProvider = StateNotifierProvider.autoDispose<BannerNotifier, BannerState>((ref) {
   final repository = ref.watch(bannerRepositoryProvider);
   return BannerNotifier(repository);
 });

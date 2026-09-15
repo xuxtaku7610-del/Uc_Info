@@ -27,7 +27,20 @@ class MealSheet extends ConsumerWidget {
     if (state.errorMessage != null) {
       return SizedBox(
         height: 300,
-        child: Center(child: Text(state.errorMessage!)),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(state.errorMessage!),
+              const SizedBox(height: AppSpacing.md),
+              TextButton.icon(
+                onPressed: () => ref.read(mealProvider.notifier).fetchTodayMeal(),
+                icon: const Icon(Icons.refresh),
+                label: const Text('다시 시도'),
+              ),
+            ],
+          ),
+        ),
       );
     }
 

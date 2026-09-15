@@ -32,6 +32,29 @@ class _BannerCarouselState extends ConsumerState<BannerCarousel> {
       return _buildSkeleton();
     }
 
+    if (state.errorMessage != null) {
+      return Container(
+        height: 120,
+        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+        decoration: BoxDecoration(
+          color: context.divider.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(state.errorMessage!, style: AppTextStyles.caption),
+              TextButton(
+                onPressed: () => ref.read(bannerProvider.notifier).fetchBanners(),
+                child: const Text('다시 시도', style: TextStyle(fontSize: 12)),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     if (state.banners.isEmpty) {
       return const SizedBox.shrink();
     }

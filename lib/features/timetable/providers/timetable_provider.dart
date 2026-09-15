@@ -31,10 +31,10 @@ class TimetableNotifier extends StateNotifier<TimetableState> {
   final ScheduleRepository _repository;
 
   TimetableNotifier(this._repository) : super(const TimetableState()) {
-    fetchSchedule();
+    fetchWeeklySchedule();
   }
 
-  Future<void> fetchSchedule() async {
+  Future<void> fetchWeeklySchedule() async {
     state = state.copyWith(isLoading: true, errorMessage: null);
     try {
       final schedule = await _repository.getWeeklySchedule();
@@ -49,7 +49,7 @@ class TimetableNotifier extends StateNotifier<TimetableState> {
 }
 
 final timetableProvider =
-    StateNotifierProvider<TimetableNotifier, TimetableState>((ref) {
+    StateNotifierProvider.autoDispose<TimetableNotifier, TimetableState>((ref) {
   final repository = ref.watch(scheduleRepositoryProvider);
   return TimetableNotifier(repository);
 });

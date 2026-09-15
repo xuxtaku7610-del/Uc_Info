@@ -28,18 +28,21 @@ class CoursePickerScreen extends ConsumerWidget {
           ? const Center(child: CircularProgressIndicator())
           : state.errorMessage != null
               ? Center(child: Text(state.errorMessage!))
-              : ListView.builder(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  itemCount: state.courses.length,
-                  itemBuilder: (context, index) {
-                    final course = state.courses[index];
-                    final isSelected = state.selectedCourseIds.contains(course.id);
-                    return _CourseListItem(
-                      course: course,
-                      isSelected: isSelected,
-                      onChanged: (_) => ref.read(coursePickerProvider.notifier).toggleSelection(course.id),
-                    );
-                  },
+              : RefreshIndicator(
+                  onRefresh: () => ref.read(coursePickerProvider.notifier).fetchAvailableCourses(),
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(AppSpacing.md),
+                    itemCount: state.courses.length,
+                    itemBuilder: (context, index) {
+                      final course = state.courses[index];
+                      final isSelected = state.selectedCourseIds.contains(course.id);
+                      return _CourseListItem(
+                        course: course,
+                        isSelected: isSelected,
+                        onChanged: (_) => ref.read(coursePickerProvider.notifier).toggleSelection(course.id),
+                      );
+                    },
+                  ),
                 ),
       bottomNavigationBar: _buildBottomBar(context, ref, state),
     );

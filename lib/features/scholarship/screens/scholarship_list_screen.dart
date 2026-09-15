@@ -43,12 +43,15 @@ class ScholarshipListScreen extends ConsumerWidget {
                 ? const Center(child: CircularProgressIndicator())
                 : state.errorMessage != null
                     ? Center(child: Text(state.errorMessage!))
-                    : ListView.builder(
-                        padding: const EdgeInsets.all(AppSpacing.md),
-                        itemCount: state.scholarships.length,
-                        itemBuilder: (context, index) {
-                          return _ScholarshipCard(scholarship: state.scholarships[index]);
-                        },
+                    : RefreshIndicator(
+                        onRefresh: () => ref.read(scholarshipListProvider.notifier).fetchScholarships(),
+                        child: ListView.builder(
+                          padding: const EdgeInsets.all(AppSpacing.md),
+                          itemCount: state.scholarships.length,
+                          itemBuilder: (context, index) {
+                            return _ScholarshipCard(scholarship: state.scholarships[index]);
+                          },
+                        ),
                       ),
           ),
         ],

@@ -63,7 +63,7 @@ class ScholarshipListNotifier extends StateNotifier<ScholarshipListState> {
 }
 
 final scholarshipListProvider =
-    StateNotifierProvider<ScholarshipListNotifier, ScholarshipListState>((ref) {
+    StateNotifierProvider.autoDispose<ScholarshipListNotifier, ScholarshipListState>((ref) {
   final repository = ref.watch(scholarshipRepositoryProvider);
   return ScholarshipListNotifier(repository);
 });

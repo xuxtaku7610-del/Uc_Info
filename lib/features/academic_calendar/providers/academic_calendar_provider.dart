@@ -53,7 +53,7 @@ class AcademicCalendarNotifier extends StateNotifier<AcademicCalendarState> {
 }
 
 final academicCalendarProvider =
-    StateNotifierProvider<AcademicCalendarNotifier, AcademicCalendarState>((ref) {
+    StateNotifierProvider.autoDispose<AcademicCalendarNotifier, AcademicCalendarState>((ref) {
   final repository = ref.watch(academicCalendarRepositoryProvider);
   return AcademicCalendarNotifier(repository);
 });

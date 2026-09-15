@@ -1,25 +1,29 @@
 // test/widget_test.dart
 // 역할: 앱의 핵심 흐름을 검증하는 위젯 테스트.
-//       SharedPreferences 상태에 따라 올바른 화면으로 이동하는지 확인한다.
+//       TokenStorage/토큰 존재 여부에 따라 올바른 화면으로 이동하는지 확인한다.
 
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:university_portal_flutter/app.dart';
 
 void main() {
-  // 각 테스트 전에 SharedPreferences를 초기화해 테스트 간 상태 누수를 방지한다.
-  setUp(() => SharedPreferences.setMockInitialValues({}));
+  const MethodChannel channel = MethodChannel('plugins.it_nomads.com/flutter_secure_storage');
+
+  setUp(() {
+    TestWidgetsFlutterBinding.ensureInitialized();
+  });
 
   testWidgets('미로그인 → 인증 화면 표시', (WidgetTester tester) async {
-    // 로그인 이력 없음 (빈 SharedPreferences)
-    SharedPreferences.setMockInitialValues({});
+    // 토큰 없음 (null 반환)
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+      if (methodCall.method == 'read') return null;
+      return null;
+    });
 
     await tester.pumpWidget(
-      // Riverpod 사용 앱은 반드시 ProviderScope로 감싸야 한다.
       const ProviderScope(child: UniversityPortalApp()),
     );
-    // GoRouter redirect + AsyncNotifier(authSessionProvider) 초기화 완료까지 대기
     await tester.pumpAndSettle();
 
     expect(find.text('학번 인증'), findsOneWidget);
@@ -28,8 +32,11 @@ void main() {
   });
 
   testWidgets('로그인 상태 → 홈 화면 표시', (WidgetTester tester) async {
-    // is_logged_in = true 로 설정 (authSessionProvider가 읽는 키)
-    SharedPreferences.setMockInitialValues({'is_logged_in': true});
+    // 토큰 존재
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+      if (methodCall.method == 'read') return 'dummy_test_token';
+      return null;
+    });
 
     await tester.pumpWidget(
       const ProviderScope(child: UniversityPortalApp()),

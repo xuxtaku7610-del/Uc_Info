@@ -29,12 +29,15 @@ class AcademicCalendarScreen extends ConsumerWidget {
           ? const Center(child: CircularProgressIndicator())
           : state.errorMessage != null
               ? Center(child: Text(state.errorMessage!))
-              : ListView.builder(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  itemCount: state.events.length,
-                  itemBuilder: (context, index) {
-                    return _CalendarEventCard(event: state.events[index]);
-                  },
+              : RefreshIndicator(
+                  onRefresh: () => ref.read(academicCalendarProvider.notifier).fetchCalendar(),
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(AppSpacing.md),
+                    itemCount: state.events.length,
+                    itemBuilder: (context, index) {
+                      return _CalendarEventCard(event: state.events[index]);
+                    },
+                  ),
                 ),
     );
   }

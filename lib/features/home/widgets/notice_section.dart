@@ -8,6 +8,7 @@ import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
 import 'package:university_portal_flutter/features/home/providers/home_provider.dart';
+import 'package:university_portal_flutter/data/models/notice_item.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 
 const _tabs = ['학사', '학과공지', '행사', '장학금', '취업'];
@@ -78,9 +79,18 @@ class NoticeSection extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
               child: Center(
-                child: Text(
-                  state.errorMessage!,
-                  style: AppTextStyles.body2.copyWith(color: context.textHint),
+                child: Column(
+                  children: [
+                    Text(
+                      state.errorMessage!,
+                      style: AppTextStyles.body2.copyWith(color: context.textHint),
+                    ),
+                    TextButton.icon(
+                      onPressed: () => ref.read(homeProvider.notifier).fetchNotices(),
+                      icon: const Icon(Icons.refresh, size: 16),
+                      label: const Text('다시 시도'),
+                    ),
+                  ],
                 ),
               ),
             )
@@ -96,51 +106,68 @@ class NoticeSection extends ConsumerWidget {
               ),
             )
           else
-            ...filtered.map(
-                  (notice) => InkWell(
-                onTap: () => context.push(
-                  '/notice/${notice.id}',
-                  extra: notice,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.sm,
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 40,
-                        child: Text(
-                          notice.date,
-                          style: AppTextStyles.caption.copyWith(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.sm),
-                      Expanded(
-                        child: Text(
-                          notice.title,
-                          style: AppTextStyles.body2,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      Icon(
-                        Icons.chevron_right,
-                        size: 16,
-                        color: context.textHint,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: filtered.length,
+              itemBuilder: (context, index) {
+                final notice = filtered[index];
+                return _NoticeListItem(notice: notice);
+              },
             ),
 
           const SizedBox(height: AppSpacing.xs),
         ],
+      ),
+    );
+  }
+}
+
+class _NoticeListItem extends StatelessWidget {
+  final NoticeItem notice;
+
+  const _NoticeListItem({required this.notice});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => context.push(
+        '/notice/${notice.id}',
+        extra: notice,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 40,
+              child: Text(
+                notice.date,
+                style: AppTextStyles.caption.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                notice.title,
+                style: AppTextStyles.body2,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            Icon(
+              Icons.chevron_right,
+              size: 16,
+              color: context.textHint,
+            ),
+          ],
+        ),
       ),
     );
   }

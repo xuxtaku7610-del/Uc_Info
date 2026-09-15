@@ -21,7 +21,7 @@ import '../../data/repositories/enrollment_repository.dart';
 import '../../data/repositories/api_enrollment_repository.dart';
 
 // 1. ApiClient Provider
-final apiClientProvider = Provider<ApiClient>((ref) => ApiClient());
+final apiClientProvider = Provider<ApiClient>((ref) => ApiClient(ref));
 
 // 2. Auth Repository Provider (API 연결 완료)
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
