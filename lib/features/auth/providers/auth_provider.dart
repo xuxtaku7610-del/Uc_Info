@@ -75,7 +75,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         department: department.trim(),
         studentId: studentId.trim(),
       );
-      // 인증 성공 → SharedPreferences에 로그인 상태 저장
+      // 인증 성공 → TokenStorage(secure storage)에 저장된 토큰 기준으로 세션 상태 갱신
       await _ref.read(authSessionProvider.notifier).login();
       state = state.copyWith(isLoading: false);
       return true;

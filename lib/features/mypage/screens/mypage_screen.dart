@@ -198,9 +198,9 @@ class _MenuCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.surface,
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-        border: Border.all(color: const Color(0xFFEAECF0), width: 0.5),
+        border: Border.all(color: context.divider, width: 0.5),
       ),
       child: Column(children: children),
     );
@@ -267,10 +267,10 @@ class _ItemDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Divider(
+    return Divider(
       height: 1,
       thickness: 0.5,
-      color: Color(0xFFF9FAFB),
+      color: context.divider,
       indent: 16,
     );
   }
@@ -287,9 +287,9 @@ class _StudentCard extends StatelessWidget {
       margin: const EdgeInsets.all(AppSpacing.md),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.surface,
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-        border: Border.all(color: const Color(0xFFEAECF0), width: 0.5),
+        border: Border.all(color: context.divider, width: 0.5),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFF2F5BE8).withValues(alpha: 0.06),

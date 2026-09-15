@@ -1,5 +1,5 @@
 // lib/core/router/app_router.dart
-// 역할: GoRouter 라우트 정의. SharedPreferences 로그인 상태에 따라 /auth↔/home 리다이렉트.
+// 역할: GoRouter 라우트 정의. TokenStorage(secure storage)의 토큰 존재 여부에 따라 /auth↔/home 리다이렉트.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
