@@ -59,8 +59,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/course-picker', builder: (_, _) => const CoursePickerScreen()),
       GoRoute(
         path: '/scholarship/:id',
-        builder: (_, state) {
-          final id = int.parse(state.pathParameters['id']!);
+        builder: (context, state) {
+          final id = _safeParseId(state.pathParameters['id']);
+          if (id == null) {
+            return const _InvalidRouteScreen(message: '잘못된 장학금 정보입니다.');
+          }
           return ScholarshipDetailScreen(scholarshipId: id);
         },
       ),
@@ -70,8 +73,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/notice/:id',
-        builder: (_, state) {
-          final id = int.parse(state.pathParameters['id']!);
+        builder: (context, state) {
+          final id = _safeParseId(state.pathParameters['id']);
+          if (id == null) {
+            return const _InvalidRouteScreen(message: '잘못된 공지사항 정보입니다.');
+          }
           // 만약 state.extra로 NoticeItem이 넘어온다면 사용 가능
           final notice = state.extra as NoticeItem?;
           return NoticeDetailScreen(noticeId: id, notice: notice);
@@ -80,3 +86,34 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
+
+/// 딥링크 등을 통해 전달된 ID 파라미터를 안전하게 숫자로 변환합니다.
+int? _safeParseId(String? raw) => raw == null ? null : int.tryParse(raw);
+
+/// 라우팅 파라미터 오류 시 표시되는 에러 화면입니다.
+class _InvalidRouteScreen extends StatelessWidget {
+  final String message;
+  const _InvalidRouteScreen({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('오류')),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.error_outline, size: 48, color: Colors.grey),
+            const SizedBox(height: 12),
+            Text(message, style: const TextStyle(fontSize: 16)),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () => context.go('/home'),
+              child: const Text('홈으로 돌아가기'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

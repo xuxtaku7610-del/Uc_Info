@@ -9,6 +9,7 @@ import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
 import 'package:university_portal_flutter/features/home/providers/home_provider.dart';
 import 'package:university_portal_flutter/data/models/notice_item.dart';
+import 'package:university_portal_flutter/shared/utils/debounced_navigation.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 
 const _tabs = ['학사', '학과공지', '행사', '장학금', '취업'];
@@ -131,7 +132,7 @@ class _NoticeListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => context.push(
+      onTap: () => context.pushOnce(
         '/notice/${notice.id}',
         extra: notice,
       ),

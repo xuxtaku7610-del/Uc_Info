@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
+import 'package:university_portal_flutter/shared/utils/debounced_navigation.dart';
 import 'package:university_portal_flutter/shared/widgets/empty_state.dart';
 import '../providers/scholarship_provider.dart';
 import '../../../data/models/scholarship.dart';
@@ -109,7 +110,7 @@ class _ScholarshipCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd)),
       child: InkWell(
-        onTap: () => context.push('/scholarship/${scholarship.id}'),
+        onTap: () => context.pushOnce('/scholarship/${scholarship.id}'),
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.md),

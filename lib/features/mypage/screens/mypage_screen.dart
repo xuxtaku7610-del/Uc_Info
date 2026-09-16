@@ -12,6 +12,7 @@ import 'package:university_portal_flutter/features/auth/providers/auth_session_p
 import 'package:university_portal_flutter/features/auth/providers/user_provider.dart';
 import 'package:university_portal_flutter/features/home/widgets/student_banner.dart';
 import 'package:university_portal_flutter/features/settings/providers/settings_provider.dart';
+import 'package:university_portal_flutter/shared/utils/debounced_navigation.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 
 class MypageScreen extends ConsumerWidget {
@@ -42,7 +43,7 @@ class MypageScreen extends ConsumerWidget {
                 _MenuItem(
                   icon: Icons.bar_chart_outlined,
                   label: '성적 확인',
-                  onTap: () => context.push('/grade-simulator'),
+                  onTap: () => context.pushOnce('/grade-simulator'),
                 ),
               ]),
 
@@ -89,13 +90,13 @@ class MypageScreen extends ConsumerWidget {
                 _MenuItem(
                   icon: Icons.translate,
                   label: '공지사항 번역',
-                  onTap: () => context.push('/notice/translation'),
+                  onTap: () => context.pushOnce('/notice/translation'),
                 ),
                 const _ItemDivider(),
                 _MenuItem(
                   icon: Icons.privacy_tip_outlined,
                   label: '개인정보처리방침',
-                  onTap: () => context.push('/privacy-policy'),
+                  onTap: () => context.pushOnce('/privacy-policy'),
                 ),
                 const _ItemDivider(),
                 _MenuItem(

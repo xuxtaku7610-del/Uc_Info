@@ -9,6 +9,7 @@ import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
 import 'package:university_portal_flutter/data/models/notice_item.dart';
 import 'package:university_portal_flutter/features/auth/providers/user_provider.dart';
+import 'package:university_portal_flutter/shared/utils/debounced_navigation.dart';
 import 'package:university_portal_flutter/shared/providers/app_providers.dart';
 
 class NoticeDetailScreen extends ConsumerStatefulWidget {
@@ -133,7 +134,7 @@ class _NoticeDetailScreenState extends ConsumerState<NoticeDetailScreen> {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
-                onPressed: () => context.push('/notice/translation'),
+                onPressed: () => context.pushOnce('/notice/translation'),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.primary,
                   side: const BorderSide(color: AppColors.primary),
