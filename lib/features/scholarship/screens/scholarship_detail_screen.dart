@@ -6,8 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
-import '../../../data/models/scholarship.dart';
-import '../../../shared/providers/app_providers.dart';
+import '../providers/scholarship_provider.dart';
 
 class ScholarshipDetailScreen extends ConsumerWidget {
   final int scholarshipId;
@@ -15,9 +14,7 @@ class ScholarshipDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 간단하게 FutureProvider나 로컬 FutureBuilder 사용 가능. 
-    // 여기선 명세에 맞춰 "상세 조회" 기능을 직접 호출
-    final repo = ref.watch(scholarshipRepositoryProvider);
+    final detailAsync = ref.watch(scholarshipDetailProvider(scholarshipId));
 
     return Scaffold(
       backgroundColor: context.background,
@@ -27,18 +24,12 @@ class ScholarshipDetailScreen extends ConsumerWidget {
         elevation: 0,
         foregroundColor: context.textPrimary,
       ),
-      body: FutureBuilder<Scholarship>(
-        future: repo.getScholarshipDetail(scholarshipId),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(snapshot.error.toString(), style: const TextStyle(color: AppColors.error)),
-            );
-          }
-          final s = snapshot.data!;
+      body: detailAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, _) => Center(
+          child: Text(error.toString(), style: const TextStyle(color: AppColors.error)),
+        ),
+        data: (s) {
           final deadlineStr = DateFormat('yyyy.MM.dd').format(s.deadline);
 
           return SingleChildScrollView(
@@ -87,7 +78,13 @@ class ScholarshipDetailScreen extends ConsumerWidget {
       child: Row(
         children: [
           SizedBox(width: 100, child: Text(label, style: AppTextStyles.label.copyWith(color: context.textSecondary))),
-          Text(value, style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold)),
+          Expanded(
+            child: Text(
+              value,
+              style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ],
       ),
     );

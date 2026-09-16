@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
+import 'package:university_portal_flutter/shared/widgets/empty_state.dart';
 import '../providers/academic_calendar_provider.dart';
 import '../../../data/models/academic_event.dart';
 
@@ -29,9 +30,14 @@ class AcademicCalendarScreen extends ConsumerWidget {
           ? const Center(child: CircularProgressIndicator())
           : state.errorMessage != null
               ? Center(child: Text(state.errorMessage!))
-              : RefreshIndicator(
-                  onRefresh: () => ref.read(academicCalendarProvider.notifier).fetchCalendar(),
-                  child: ListView.builder(
+              : state.events.isEmpty
+                  ? const EmptyStateWidget(
+                      message: '등록된 학사일정이 없습니다.',
+                      icon: Icons.calendar_today_outlined,
+                    )
+                  : RefreshIndicator(
+                      onRefresh: () => ref.read(academicCalendarProvider.notifier).fetchCalendar(),
+                      child: ListView.builder(
                     padding: const EdgeInsets.all(AppSpacing.md),
                     itemCount: state.events.length,
                     itemBuilder: (context, index) {
@@ -58,12 +64,12 @@ class _CalendarEventCard extends StatelessWidget {
 
   Color _getCategoryColor() {
     switch (event.category) {
-      case 'ACADEMIC':     return Colors.blue;
-      case 'EXAM':         return Colors.red;
-      case 'REGISTRATION': return Colors.green;
-      case 'VACATION':     return Colors.orange;
-      case 'EVENT':        return Colors.purple;
-      default:             return Colors.grey;
+      case 'ACADEMIC':     return AppColors.calendarAcademic;
+      case 'EXAM':         return AppColors.calendarExam;
+      case 'REGISTRATION': return AppColors.calendarRegistration;
+      case 'VACATION':     return AppColors.calendarVacation;
+      case 'EVENT':        return AppColors.calendarEvent;
+      default:             return AppColors.calendarEtc;
     }
   }
 
@@ -76,6 +82,7 @@ class _CalendarEventCard extends StatelessWidget {
         : '${_formatDate(event.startDate)} ~ ${_formatDate(event.endDate!)}';
 
     return Card(
+      color: context.surface,
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd)),
       child: Padding(

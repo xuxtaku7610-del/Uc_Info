@@ -116,7 +116,7 @@ class _NoticeDetailScreenState extends ConsumerState<NoticeDetailScreen> {
             Text(notice.title, style: AppTextStyles.heading2),
             const SizedBox(height: AppSpacing.md),
 
-            const Divider(color: Colors.grey),
+            Divider(color: context.divider),
             const SizedBox(height: AppSpacing.md),
 
             // 본문

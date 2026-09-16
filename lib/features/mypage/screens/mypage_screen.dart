@@ -322,25 +322,34 @@ class _StudentCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(user.name, style: AppTextStyles.heading2),
-                  const SizedBox(height: 2),
-                  Text(
-                    '${user.department} ${user.year}학년',
-                    style: AppTextStyles.body2.copyWith(
-                      color: context.textSecondary,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      user.name,
+                      style: AppTextStyles.heading2,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    user.studentId,
-                    style: AppTextStyles.caption.copyWith(
-                      color: context.textHint,
+                    const SizedBox(height: 2),
+                    Text(
+                      '${user.department} ${user.year}학년',
+                      style: AppTextStyles.body2.copyWith(
+                        color: context.textSecondary,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 2),
+                    Text(
+                      user.studentId,
+                      style: AppTextStyles.caption.copyWith(
+                        color: context.textHint,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

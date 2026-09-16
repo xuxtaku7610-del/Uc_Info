@@ -35,6 +35,14 @@ class AppColors {
     Color(0xFFFFB4C2), // 핑크
     Color(0xFFC8F5A0), // 연두
   ];
+
+  // 학사일정 카테고리 색상
+  static const Color calendarAcademic     = Colors.blue;
+  static const Color calendarExam         = Colors.red;
+  static const Color calendarRegistration = Colors.green;
+  static const Color calendarVacation     = Colors.orange;
+  static const Color calendarEvent        = Colors.purple;
+  static const Color calendarEtc          = Colors.grey;
 }
 
 extension AppColorsX on BuildContext {

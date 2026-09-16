@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
+import 'package:university_portal_flutter/shared/widgets/empty_state.dart';
 import '../providers/scholarship_provider.dart';
 import '../../../data/models/scholarship.dart';
 
@@ -43,9 +44,14 @@ class ScholarshipListScreen extends ConsumerWidget {
                 ? const Center(child: CircularProgressIndicator())
                 : state.errorMessage != null
                     ? Center(child: Text(state.errorMessage!))
-                    : RefreshIndicator(
-                        onRefresh: () => ref.read(scholarshipListProvider.notifier).fetchScholarships(),
-                        child: ListView.builder(
+                    : state.scholarships.isEmpty
+                        ? const EmptyStateWidget(
+                            message: '해당 조건의 장학금이 없습니다.',
+                            icon: Icons.card_membership_outlined,
+                          )
+                        : RefreshIndicator(
+                            onRefresh: () => ref.read(scholarshipListProvider.notifier).fetchScholarships(),
+                            child: ListView.builder(
                           padding: const EdgeInsets.all(AppSpacing.md),
                           itemCount: state.scholarships.length,
                           itemBuilder: (context, index) {
@@ -99,6 +105,7 @@ class _ScholarshipCard extends StatelessWidget {
     final isExpired = dDay < 0;
 
     return Card(
+      color: context.surface,
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd)),
       child: InkWell(
