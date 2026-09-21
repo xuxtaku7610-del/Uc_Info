@@ -14,11 +14,18 @@ class Scholarship {
   });
 
   factory Scholarship.fromJson(Map<String, dynamic> json) {
+    DateTime parsedDeadline;
+    try {
+      parsedDeadline = DateTime.parse(json['deadline'] ?? '');
+    } catch (_) {
+      parsedDeadline = DateTime.now();
+    }
+
     return Scholarship(
       id: json['id'] ?? 0,
       title: json['title'] ?? '',
       type: json['type'] ?? 'INTERNAL',
-      deadline: DateTime.parse(json['deadline'] ?? DateTime.now().toIso8601String()),
+      deadline: parsedDeadline,
     );
   }
 

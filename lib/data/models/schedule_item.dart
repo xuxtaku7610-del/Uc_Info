@@ -22,7 +22,7 @@ class ScheduleItem {
     required this.color,
   });
 
-  factory ScheduleItem.fromJson(Map<String, dynamic> json) {
+  factory ScheduleItem.fromJson(Map<String, dynamic> json, {int index = 0}) {
     return ScheduleItem(
       enrollmentId: json['enrollmentId'],
       subject: json['subject'] ?? '',
@@ -31,7 +31,7 @@ class ScheduleItem {
       endHour: json['endHour'] ?? 10,
       room: json['room'] ?? '',
       professor: json['professor'] ?? '',
-      color: json['color'] ?? 0,
+      color: index,
     );
   }
 }

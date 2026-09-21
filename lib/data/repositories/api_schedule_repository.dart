@@ -21,7 +21,9 @@ class ApiScheduleRepository implements ScheduleRepository {
       final List<dynamic> data = rawData;
 
       try {
-        return data.map((json) => ScheduleItem.fromJson(json)).toList();
+        return data.asMap().entries.map((entry) {
+          return ScheduleItem.fromJson(entry.value, index: entry.key);
+        }).toList();
       } catch (e) {
         throw Exception('데이터 형식이 올바르지 않습니다.');
       }
