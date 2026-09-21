@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/network/token_storage.dart';
 import '../../../features/notification/providers/notice_inbox_provider.dart';
 import 'user_provider.dart';
@@ -21,12 +20,8 @@ class AuthSessionNotifier extends AsyncNotifier<bool> {
     // 1. 보안 저장소 토큰 삭제
     await TokenStorage.clearToken();
 
-    // 2. 알림함 로컬 데이터(디스크) 삭제
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(NoticeInboxNotifier.entriesKey);
-    await prefs.remove(NoticeInboxNotifier.notifiedIdsKey);
-
-    // 3. 메모리 상의 Provider 상태들 초기화
+    // 2. 메모리 상의 Provider 상태들 초기화
+    // (알림함 데이터는 계정별 키로 분리되어 있으므로 디스크에서 삭제하지 않고 보존)
     ref.invalidate(userProvider);
     ref.invalidate(noticeInboxProvider);
 

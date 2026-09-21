@@ -43,9 +43,7 @@ class NoticeInboxSheet extends ConsumerWidget {
               children: [
                 Text('알림함', style: AppTextStyles.heading2),
                 TextButton(
-                  onPressed: () {
-                    // TODO: Clear all notifications? Not requested yet.
-                  },
+                  onPressed: () => ref.read(noticeInboxProvider.notifier).markAllSeen(),
                   child: const Text('모두 읽음'),
                 ),
               ],

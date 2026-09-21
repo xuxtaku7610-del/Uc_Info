@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/models/notice_inbox_entry.dart';
@@ -9,14 +10,24 @@ class NoticeInboxNotifier extends StateNotifier<List<NoticeInboxEntry>> {
   }
 
   final Ref _ref;
-  
-  // 외부(logout 처리 등)에서도 사용 가능하도록 public 상수로 변경
-  static const entriesKey = 'notice_inbox_entries';
-  static const notifiedIdsKey = 'notified_notice_ids';
+
+  // 계정별 저장을 위한 동적 키 생성 헬퍼
+  Future<String> _getEntriesKey() async {
+    final prefs = await SharedPreferences.getInstance();
+    final studentId = prefs.getString('current_student_id') ?? 'guest';
+    return 'notice_inbox_entries_$studentId';
+  }
+
+  Future<String> _getNotifiedIdsKey() async {
+    final prefs = await SharedPreferences.getInstance();
+    final studentId = prefs.getString('current_student_id') ?? 'guest';
+    return 'notified_notice_ids_$studentId';
+  }
 
   Future<void> _loadFromPrefs() async {
     final prefs = await SharedPreferences.getInstance();
-    final rawEntries = prefs.getString(entriesKey);
+    final key = await _getEntriesKey();
+    final rawEntries = prefs.getString(key);
     if (rawEntries != null) {
       state = NoticeInboxEntry.decode(rawEntries);
     }
@@ -24,7 +35,8 @@ class NoticeInboxNotifier extends StateNotifier<List<NoticeInboxEntry>> {
 
   Future<void> _saveToPrefs() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(entriesKey, NoticeInboxEntry.encode(state));
+    final key = await _getEntriesKey();
+    await prefs.setString(key, NoticeInboxEntry.encode(state));
   }
 
   Future<void> checkForUpdates() async {
@@ -33,7 +45,8 @@ class NoticeInboxNotifier extends StateNotifier<List<NoticeInboxEntry>> {
       final remoteNotices = await repository.getNotices();
       
       final prefs = await SharedPreferences.getInstance();
-      final seenIds = prefs.getStringList(notifiedIdsKey)?.map(int.parse).toSet() ?? {};
+      final key = await _getNotifiedIdsKey();
+      final seenIds = prefs.getStringList(key)?.map(int.parse).toSet() ?? {};
       
       final newEntries = <NoticeInboxEntry>[];
       final newSeenIds = Set<int>.from(seenIds);
@@ -54,7 +67,7 @@ class NoticeInboxNotifier extends StateNotifier<List<NoticeInboxEntry>> {
       if (newEntries.isNotEmpty) {
         state = [...newEntries, ...state];
         await _saveToPrefs();
-        await prefs.setStringList(notifiedIdsKey, newSeenIds.map((id) => id.toString()).toList());
+        await prefs.setStringList(key, newSeenIds.map((id) => id.toString()).toList());
       }
     } catch (e) {
       // Background check failed silently
@@ -73,6 +86,34 @@ class NoticeInboxNotifier extends StateNotifier<List<NoticeInboxEntry>> {
 
     if (changed) {
       await _saveToPrefs();
+    }
+  }
+
+  /// 모든 알림을 읽음 처리하고 서버에도 반영합니다.
+  Future<void> markAllSeen() async {
+    if (!state.any((e) => !e.seen)) return;
+
+    final prefs = await SharedPreferences.getInstance();
+    final studentId = prefs.getString('current_student_id');
+    final repository = _ref.read(noticeRepositoryProvider);
+
+    // 읽지 않았던 항목들의 ID 추출
+    final unseenIds = state
+        .where((e) => !e.seen)
+        .map((e) => e.noticeId)
+        .toList();
+
+    // 로컬 상태 즉시 업데이트
+    state = state.map((e) => e.copyWith(seen: true)).toList();
+    await _saveToPrefs();
+
+    // 서버에도 비동기로 반영 (studentId가 있는 경우만)
+    if (studentId != null) {
+      for (final id in unseenIds) {
+        repository.markAsRead(id, studentId).catchError((_) {
+          // 개별 서버 호출 실패는 무시
+        });
+      }
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/network/api_client.dart';
 import '../../core/network/token_storage.dart';
 import '../../core/network/api_exception_util.dart';
@@ -33,6 +34,10 @@ class ApiAuthRepository implements AuthRepository {
         throw Exception('서버 응답에 인증 토큰이 누락되었습니다.');
       }
       await TokenStorage.saveToken(token);
+
+      // 계정별 데이터 관리를 위해 현재 학번 저장
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('current_student_id', user.studentId);
 
       return user;
     } on DioException catch (e) {
