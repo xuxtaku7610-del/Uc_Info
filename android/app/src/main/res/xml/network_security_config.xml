@@ -2,6 +2,6 @@
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
         <!-- TODO: 팀장님 실제 서버 IP로 교체 필요. 지금은 api_client.dart의 baseUrl placeholder에 맞춘 임시값 -->
-        <domain includeSubdomains="true">api.uc-info.com</domain>
+        <domain includeSubdomains="true">uc-info.cod-searobin.ts.net</domain>
     </domain-config>
 </network-security-config>

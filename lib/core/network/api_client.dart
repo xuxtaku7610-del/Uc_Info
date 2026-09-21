@@ -11,7 +11,7 @@ class ApiClient {
       : dio = Dio(
           BaseOptions(
             // TODO: 팀장님 실제 서버 IP로 교체 필요. 바꿀 때 network_security_config.xml의 domain도 같이 바꿔야 함.
-            baseUrl: 'https://api.uc-info.com',
+            baseUrl: 'https://uc-info.cod-searobin.ts.net',
             connectTimeout: const Duration(seconds: 5),
             receiveTimeout: const Duration(seconds: 5),
           ),
