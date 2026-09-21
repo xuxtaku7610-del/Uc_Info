@@ -9,12 +9,14 @@ class NoticeInboxNotifier extends StateNotifier<List<NoticeInboxEntry>> {
   }
 
   final Ref _ref;
-  static const _entriesKey = 'notice_inbox_entries';
-  static const _seenIdsKey = 'notified_notice_ids';
+  
+  // 외부(logout 처리 등)에서도 사용 가능하도록 public 상수로 변경
+  static const entriesKey = 'notice_inbox_entries';
+  static const notifiedIdsKey = 'notified_notice_ids';
 
   Future<void> _loadFromPrefs() async {
     final prefs = await SharedPreferences.getInstance();
-    final rawEntries = prefs.getString(_entriesKey);
+    final rawEntries = prefs.getString(entriesKey);
     if (rawEntries != null) {
       state = NoticeInboxEntry.decode(rawEntries);
     }
@@ -22,7 +24,7 @@ class NoticeInboxNotifier extends StateNotifier<List<NoticeInboxEntry>> {
 
   Future<void> _saveToPrefs() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_entriesKey, NoticeInboxEntry.encode(state));
+    await prefs.setString(entriesKey, NoticeInboxEntry.encode(state));
   }
 
   Future<void> checkForUpdates() async {
@@ -31,7 +33,7 @@ class NoticeInboxNotifier extends StateNotifier<List<NoticeInboxEntry>> {
       final remoteNotices = await repository.getNotices();
       
       final prefs = await SharedPreferences.getInstance();
-      final seenIds = prefs.getStringList(_seenIdsKey)?.map(int.parse).toSet() ?? {};
+      final seenIds = prefs.getStringList(notifiedIdsKey)?.map(int.parse).toSet() ?? {};
       
       final newEntries = <NoticeInboxEntry>[];
       final newSeenIds = Set<int>.from(seenIds);
@@ -52,7 +54,7 @@ class NoticeInboxNotifier extends StateNotifier<List<NoticeInboxEntry>> {
       if (newEntries.isNotEmpty) {
         state = [...newEntries, ...state];
         await _saveToPrefs();
-        await prefs.setStringList(_seenIdsKey, newSeenIds.map((id) => id.toString()).toList());
+        await prefs.setStringList(notifiedIdsKey, newSeenIds.map((id) => id.toString()).toList());
       }
     } catch (e) {
       // Background check failed silently
