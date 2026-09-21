@@ -18,7 +18,12 @@ class NoticeInboxSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entries = ref.watch(noticeInboxProvider.notifier).entries;
+    // .notifier가 아닌 provider 자체를 watch하여 상태 변화 감지
+    final entries = ref.watch(noticeInboxProvider);
+    
+    // 최신순 정렬 (addedAt 내림차순)
+    final sortedEntries = List.from(entries)
+      ..sort((a, b) => b.addedAt.compareTo(a.addedAt));
 
     return Container(
       constraints: BoxConstraints(
@@ -47,7 +52,7 @@ class NoticeInboxSheet extends ConsumerWidget {
             ),
           ),
           const Divider(),
-          if (entries.isEmpty)
+          if (sortedEntries.isEmpty)
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 40),
               child: Center(child: Text('새로운 알림이 없습니다.')),
@@ -56,10 +61,10 @@ class NoticeInboxSheet extends ConsumerWidget {
             Flexible(
               child: ListView.separated(
                 shrinkWrap: true,
-                itemCount: entries.length,
+                itemCount: sortedEntries.length,
                 separatorBuilder: (_, __) => const Divider(height: 1),
                 itemBuilder: (context, index) {
-                  final entry = entries[index];
+                  final entry = sortedEntries[index];
                   return ListTile(
                     tileColor: entry.seen ? null : Colors.blue.withValues(alpha: 0.05),
                     title: Text(

@@ -25,7 +25,9 @@ class UCHeader extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hasUnseen = ref.watch(noticeInboxProvider.notifier).hasUnseen;
+    // .notifier가 아닌 provider 자체를 watch하여 상태(List) 변화 감지
+    final entries = ref.watch(noticeInboxProvider);
+    final hasUnseen = entries.any((e) => !e.seen);
 
     return AppBar(
       backgroundColor: AppColors.primary,
