@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
+import 'package:university_portal_flutter/features/auth/providers/auth_session_provider.dart';
 import 'package:university_portal_flutter/features/settings/providers/settings_provider.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 
@@ -66,6 +67,48 @@ class SettingsSheet extends ConsumerWidget {
                 DropdownMenuItem(value: 'English', child: Text('English')),
               ],
             ),
+          ),
+          const Divider(height: 1),
+          _SettingRow(
+            label: '계정 관리',
+            child: TextButton(
+              onPressed: () => _showLogoutDialog(context, ref),
+              child: const Text(
+                '로그아웃',
+                style: TextStyle(
+                  color: AppColors.error,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context, WidgetRef ref) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('로그아웃'),
+        content: const Text('정말 로그아웃 하시겠습니까?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('취소', style: TextStyle(color: context.textSecondary)),
+          ),
+          TextButton(
+            onPressed: () async {
+              // 다이얼로그 닫기
+              Navigator.of(context).pop();
+              // 설정 시트(바텀시트) 닫기
+              Navigator.of(context).pop();
+              
+              // 로그아웃 처리 (비동기)
+              await ref.read(authSessionProvider.notifier).logout();
+            },
+            child: const Text('로그아웃', style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),

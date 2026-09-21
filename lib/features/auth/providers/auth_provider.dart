@@ -56,8 +56,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
     // 유효성 검사: 버튼 탭 시 전체 필드 동시 검사
     final nameErr = name.trim().length < 2 ? '이름을 입력해주세요.' : null;
     final deptErr = department.trim().isEmpty ? '학과를 입력해주세요.' : null;
-    final idErr = !RegExp(r'^\d{7}$').hasMatch(studentId.trim())
-        ? '학번 7자리를 입력해주세요.'
+    final idErr = studentId.trim().isEmpty
+        ? '학번을 입력해주세요.'
         : null;
 
     state = state.copyWith(

@@ -229,7 +229,7 @@ class _NoticeCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
 
           // Bullet 3개
-          const _BulletItem('학번은 입학년도를 포함한 7자리 숫자입니다. (예: 2411206)'),
+          const _BulletItem('학번을 입력해주세요. (예: 2411206)'),
           const _BulletItem('이름은 학교에 등록된 실명을 입력해주세요.'),
           const _BulletItem('인증 오류가 지속되면 학생처(☎ 052-950-9000)로 문의해주세요.'),
         ],
