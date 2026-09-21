@@ -5,7 +5,6 @@ import '../../../data/models/course_offering.dart';
 import '../../../data/repositories/course_repository.dart';
 import '../../../data/repositories/enrollment_repository.dart';
 import '../../../shared/providers/app_providers.dart';
-import '../../auth/providers/user_provider.dart';
 import '../../timetable/providers/timetable_provider.dart';
 
 class CoursePickerState {
@@ -14,7 +13,6 @@ class CoursePickerState {
   final bool isLoading;
   final bool isSubmitting;
   final String? errorMessage;
-  final int? selectedYearFilter; // null = 전체, 1~4 = 각 학년
 
   const CoursePickerState({
     this.courses = const [],
@@ -22,7 +20,6 @@ class CoursePickerState {
     this.isLoading = false,
     this.isSubmitting = false,
     this.errorMessage,
-    this.selectedYearFilter,
   });
 
   CoursePickerState copyWith({
@@ -31,7 +28,6 @@ class CoursePickerState {
     bool? isLoading,
     bool? isSubmitting,
     String? errorMessage,
-    int? Function()? selectedYearFilter,
   }) {
     return CoursePickerState(
       courses: courses ?? this.courses,
@@ -39,7 +35,6 @@ class CoursePickerState {
       isLoading: isLoading ?? this.isLoading,
       isSubmitting: isSubmitting ?? this.isSubmitting,
       errorMessage: errorMessage,
-      selectedYearFilter: selectedYearFilter != null ? selectedYearFilter() : this.selectedYearFilter,
     );
   }
 }
@@ -50,15 +45,7 @@ class CoursePickerNotifier extends StateNotifier<CoursePickerState> {
   final Ref _ref;
 
   CoursePickerNotifier(this._courseRepo, this._enrollmentRepo, this._ref) : super(const CoursePickerState()) {
-    _initializeFilter();
     fetchAvailableCourses();
-  }
-
-  void _initializeFilter() {
-    final user = _ref.read(userProvider).user;
-    if (user != null) {
-      state = state.copyWith(selectedYearFilter: () => user.year);
-    }
   }
 
   Future<void> fetchAvailableCourses() async {
@@ -76,10 +63,6 @@ class CoursePickerNotifier extends StateNotifier<CoursePickerState> {
     } catch (e) {
       state = state.copyWith(isLoading: false, errorMessage: '개설과목을 불러오지 못했습니다.');
     }
-  }
-
-  void setYearFilter(int? year) {
-    state = state.copyWith(selectedYearFilter: () => year);
   }
 
   void toggleSelection(int courseId) {

@@ -249,10 +249,10 @@ class _TimetableGrid extends ConsumerWidget {
                         children: [
                           Text(
                             item.subject,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w700,
-                              color: context.textPrimary,
+                              color: AppColors.timetableBlockText,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -260,9 +260,9 @@ class _TimetableGrid extends ConsumerWidget {
                           if (height > 70)
                             Text(
                               item.room,
-                              style: TextStyle(
+                              style: const TextStyle(
                               fontSize: 9,
-                              color: context.textSecondary,
+                              color: AppColors.timetableBlockTextSecondary,
                             ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,

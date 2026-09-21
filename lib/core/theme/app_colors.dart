@@ -36,6 +36,10 @@ class AppColors {
     Color(0xFFC8F5A0), // 연두
   ];
 
+  // 시간표 블록 내부 텍스트용 고정 색상 (다크모드에서도 가독성 확보)
+  static const Color timetableBlockText = Color(0xFF1A1A2E);
+  static const Color timetableBlockTextSecondary = Color(0xFF6B7280);
+
   // 학사일정 카테고리 색상
   static const Color calendarAcademic     = Colors.blue;
   static const Color calendarExam         = Colors.red;
