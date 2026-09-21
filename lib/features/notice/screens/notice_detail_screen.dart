@@ -9,6 +9,7 @@ import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
 import 'package:university_portal_flutter/data/models/notice_item.dart';
 import 'package:university_portal_flutter/features/auth/providers/user_provider.dart';
+import 'package:university_portal_flutter/features/notification/providers/notice_inbox_provider.dart';
 import 'package:university_portal_flutter/shared/utils/debounced_navigation.dart';
 import 'package:university_portal_flutter/shared/providers/app_providers.dart';
 
@@ -40,6 +41,8 @@ class _NoticeDetailScreenState extends ConsumerState<NoticeDetailScreen> {
       // 혹시라도 아직 user 로딩 전이라면 listener를 통해 로딩 완료 시점에 재시도하도록 구성 가능
       debugPrint('Warning: studentId is null, marking as read skipped.');
     }
+    // 로컬 알림함에서도 읽음 처리
+    ref.read(noticeInboxProvider.notifier).markEntrySeen(widget.noticeId);
   }
 
   // 카테고리 키 → 한국어 레이블 (백엔드 대문자 규격에 맞춤)

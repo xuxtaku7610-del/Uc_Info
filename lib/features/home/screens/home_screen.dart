@@ -12,15 +12,46 @@ import 'package:university_portal_flutter/features/home/widgets/shortcut_grid.da
 import 'package:university_portal_flutter/features/home/widgets/student_banner.dart';
 import 'package:university_portal_flutter/features/home/widgets/banner_carousel.dart';
 import 'package:university_portal_flutter/features/auth/providers/user_provider.dart';
+import 'package:university_portal_flutter/features/notification/providers/notice_inbox_provider.dart';
+import 'package:university_portal_flutter/features/notification/screens/notice_inbox_sheet.dart';
 import 'package:university_portal_flutter/features/settings/screens/settings_sheet.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 import 'package:university_portal_flutter/shared/widgets/uc_header.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    // 앱 시작 시 공지 업데이트 체크
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(noticeInboxProvider.notifier).checkForUpdates();
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // 앱 복귀 시 공지 업데이트 체크
+      ref.read(noticeInboxProvider.notifier).checkForUpdates();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final userState = ref.watch(userProvider);
 
     return Scaffold(
@@ -30,6 +61,12 @@ class HomeScreen extends ConsumerWidget {
         onSettingsTap: () => showAppBottomSheet<void>(
           context,
           (_) => const SettingsSheet(),
+          isScrollControlled: true,
+        ),
+        showNotificationBell: true,
+        onNotificationTap: () => showAppBottomSheet<void>(
+          context,
+          (_) => const NoticeInboxSheet(),
           isScrollControlled: true,
         ),
       ),
