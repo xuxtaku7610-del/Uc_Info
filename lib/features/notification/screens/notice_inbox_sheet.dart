@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
+import 'package:university_portal_flutter/shared/utils/debounced_navigation.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 import '../providers/notice_inbox_provider.dart';
 
@@ -99,7 +99,7 @@ class NoticeInboxSheet extends ConsumerWidget {
                           onTap: () {
                             ref.read(noticeInboxProvider.notifier).markEntrySeen(entry.noticeId);
                             Navigator.pop(context);
-                            context.push('/notice/${entry.noticeId}');
+                            context.pushOnce('/notice/${entry.noticeId}');
                           },
                         );
                       },

@@ -28,7 +28,7 @@ class ApiScheduleRepository implements ScheduleRepository {
         throw Exception('데이터 형식이 올바르지 않습니다.');
       }
     } on DioException catch (e) {
-      throw Exception(extractErrorMessage(e, '시간표 정보 불러오기 실패: ${e.message}'));
+      throw Exception(extractErrorMessage(e, '시간표 정보를 불러오지 못했습니다.'));
     }
   }
 }

@@ -22,7 +22,7 @@ class ApiMealRepository implements MealRepository {
 
       return MealData.fromJson(response.data);
     } on DioException catch (e) {
-      throw Exception(extractErrorMessage(e, '식단 정보 불러오기 실패: ${e.message}'));
+      throw Exception(extractErrorMessage(e, '식단 정보를 불러오지 못했습니다.'));
     }
   }
 

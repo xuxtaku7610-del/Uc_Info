@@ -35,6 +35,9 @@ final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/auth',
     refreshListenable: notifier,
+    errorBuilder: (context, state) => const _InvalidRouteScreen(
+      message: '페이지를 찾을 수 없습니다.',
+    ),
     redirect: (context, state) {
       final authState = ref.read(authSessionProvider);
 
