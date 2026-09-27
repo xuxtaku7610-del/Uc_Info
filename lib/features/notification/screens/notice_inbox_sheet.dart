@@ -1,3 +1,5 @@
+// 역할: 알림함 Bottom Sheet. 수신된 공지사항 목록 표시 및 읽음 처리.
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -50,51 +52,60 @@ class NoticeInboxSheet extends ConsumerWidget {
             ),
           ),
           const Divider(),
-          if (sortedEntries.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 40),
-              child: Center(child: Text('새로운 알림이 없습니다.')),
-            )
-          else
-            Flexible(
-              child: ListView.separated(
-                shrinkWrap: true,
-                itemCount: sortedEntries.length,
-                separatorBuilder: (_, __) => const Divider(height: 1),
-                itemBuilder: (context, index) {
-                  final entry = sortedEntries[index];
-                  return ListTile(
-                    tileColor: entry.seen ? null : Colors.blue.withValues(alpha: 0.05),
-                    title: Text(
-                      entry.title,
-                      style: AppTextStyles.body2.copyWith(
-                        fontWeight: entry.seen ? FontWeight.normal : FontWeight.w700,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: Row(
-                      children: [
-                        Text(
-                          entry.category,
-                          style: AppTextStyles.caption.copyWith(color: Colors.blue),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          _getTimeAgo(entry.addedAt),
-                          style: AppTextStyles.caption,
+          Flexible(
+            child: RefreshIndicator(
+              onRefresh: () => ref.read(noticeInboxProvider.notifier).checkForUpdates(),
+              child: sortedEntries.isEmpty
+                  ? ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 40),
+                          child: Center(child: Text('새로운 알림이 없습니다.')),
                         ),
                       ],
+                    )
+                  : ListView.separated(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: sortedEntries.length,
+                      separatorBuilder: (_, __) => const Divider(height: 1),
+                      itemBuilder: (context, index) {
+                        final entry = sortedEntries[index];
+                        return ListTile(
+                          tileColor: entry.seen ? null : Colors.blue.withValues(alpha: 0.05),
+                          title: Text(
+                            entry.title,
+                            style: AppTextStyles.body2.copyWith(
+                              fontWeight: entry.seen ? FontWeight.normal : FontWeight.w700,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          subtitle: Row(
+                            children: [
+                              Text(
+                                entry.category,
+                                style: AppTextStyles.caption.copyWith(color: Colors.blue),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                _getTimeAgo(entry.addedAt),
+                                style: AppTextStyles.caption,
+                              ),
+                            ],
+                          ),
+                          onTap: () {
+                            ref.read(noticeInboxProvider.notifier).markEntrySeen(entry.noticeId);
+                            Navigator.pop(context);
+                            context.push('/notice/${entry.noticeId}');
+                          },
+                        );
+                      },
                     ),
-                    onTap: () {
-                      ref.read(noticeInboxProvider.notifier).markEntrySeen(entry.noticeId);
-                      Navigator.pop(context);
-                      context.push('/notice/${entry.noticeId}');
-                    },
-                  );
-                },
-              ),
             ),
+          ),
           const SizedBox(height: AppSpacing.xl),
         ],
       ),

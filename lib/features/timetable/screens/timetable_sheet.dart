@@ -88,18 +88,22 @@ class TimetableSheet extends ConsumerWidget {
                             ],
                           ),
                         )
-                      : SingleChildScrollView(
-                          controller: scrollController,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.md, vertical: 4),
-                          child: state.schedule.isEmpty
-                              ? const Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(top: 100),
-                                    child: Text('시간표 정보가 없습니다.'),
-                                  ),
-                                )
-                              : _TimetableGrid(schedule: state.schedule),
+                      : RefreshIndicator(
+                          onRefresh: () => ref.read(timetableProvider.notifier).fetchWeeklySchedule(),
+                          child: SingleChildScrollView(
+                            controller: scrollController,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.md, vertical: 4),
+                            child: state.schedule.isEmpty
+                                ? const Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(top: 100),
+                                      child: Text('시간표 정보가 없습니다.'),
+                                    ),
+                                  )
+                                : _TimetableGrid(schedule: state.schedule),
+                          ),
                         ),
             ),
           ],

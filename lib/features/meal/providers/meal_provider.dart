@@ -55,6 +55,11 @@ class MealNotifier extends StateNotifier<MealState> {
       );
     }
   }
+
+  Future<void> refreshCurrent() async {
+    final meal = await _repository.getMealByDate(state.requestedDate);
+    state = state.copyWith(meal: meal);
+  }
 }
 
 final mealProvider = StateNotifierProvider.autoDispose<MealNotifier, MealState>((ref) {
