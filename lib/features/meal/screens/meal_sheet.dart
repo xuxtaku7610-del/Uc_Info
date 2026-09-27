@@ -34,7 +34,7 @@ class MealSheet extends ConsumerWidget {
               Text(state.errorMessage!),
               const SizedBox(height: AppSpacing.md),
               TextButton.icon(
-                onPressed: () => ref.read(mealProvider.notifier).fetchTodayMeal(),
+                onPressed: () => ref.read(mealProvider.notifier).fetchMealByDate(state.requestedDate),
                 icon: const Icon(Icons.refresh),
                 label: const Text('다시 시도'),
               ),
@@ -72,7 +72,47 @@ class MealSheet extends ConsumerWidget {
             children: [
               Text('오늘의 식단', style: AppTextStyles.heading2),
               const Spacer(),
-              Text(meal.date, style: AppTextStyles.caption),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(meal.date, style: AppTextStyles.caption),
+                  // 백엔드가 date 파라미터 지원 시작하면 두 값이 일치하게 됨, 그때 이 보조 텍스트는 제거 가능
+                  Text(
+                    '요청: ${state.requestedDate.year}-${state.requestedDate.month.toString().padLeft(2, '0')}-${state.requestedDate.day.toString().padLeft(2, '0')}',
+                    style: AppTextStyles.caption.copyWith(color: context.textHint, fontSize: 10),
+                  ),
+                ],
+              ),
+              const SizedBox(width: AppSpacing.xs),
+              IconButton(
+                icon: const Icon(Icons.calendar_month),
+                onPressed: () async {
+                  final picked = await showDatePicker(
+                    context: context,
+                    initialDate: state.requestedDate,
+                    firstDate: DateTime(2020),
+                    lastDate: DateTime(2030),
+                    builder: (context, child) {
+                      return Theme(
+                        data: Theme.of(context).copyWith(
+                          colorScheme: ColorScheme.light(
+                            primary: AppColors.primary,
+                            onPrimary: Colors.white,
+                            surface: context.surface,
+                            onSurface: context.textPrimary,
+                          ),
+                        ),
+                        child: child!,
+                      );
+                    },
+                  );
+                  if (picked != null) {
+                    ref.read(mealProvider.notifier).fetchMealByDate(picked);
+                  }
+                },
+                constraints: const BoxConstraints(),
+                padding: EdgeInsets.zero,
+              ),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
