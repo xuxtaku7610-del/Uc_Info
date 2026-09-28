@@ -4,7 +4,7 @@
 - 플랫폼: iOS / Android (Flutter / Dart SDK ^3.11.0)
 - 앱 이름: university_portal_flutter
 - 상태관리: flutter_riverpod ^2.6.1 | 라우팅: go_router ^14.6.0
-- 현재 단계: **Phase 1 — UI + Mock 데이터 (API 연동 없음)**
+- 현재 단계: **Phase 2 — REST API 연동 완료 (베타 출시 준비)**
 - 브랜드 컬러: Primary `#2F5BE8` / Accent `#FFC72C`
 
 ---
@@ -14,12 +14,14 @@
 |---|---|---|
 | flutter_riverpod | ^2.6.1 | 상태관리 |
 | go_router | ^14.6.0 | 라우팅 |
+| dio | ^5.4.0 | REST API 통신 |
+| flutter_secure_storage | ^11.1.1 | 인증 토큰 안전 저장 |
+| intl | ^0.19.0 | 날짜 및 포맷팅 |
 | qr_flutter | ^4.1.0 | 모바일 학생증 QR |
 | url_launcher | ^6.3.1 | 외부 링크 |
 | shared_preferences | ^2.3.0 | 설정값 로컬 저장 |
 
-> ❌ get_it, injectable, dio, riverpod_annotation, riverpod_generator 사용 금지
-> ❌ http, Dio 등 네트워크 패키지 금지 (Phase 2 이전)
+> ❌ get_it, injectable, riverpod_annotation, riverpod_generator 사용 금지
 
 ---
 
@@ -27,24 +29,30 @@
 ```
 lib/
 ├── core/
-│   ├── theme/        # AppColors, AppTextStyles, AppSpacing
+│   ├── constants/    # 앱 상수 (AppConstants)
+│   ├── network/      # ApiClient, TokenStorage, ApiExceptionUtil
 │   ├── router/       # GoRouter 라우트 정의
-│   ├── constants/    # 앱 상수
-│   └── utils/        # 날짜 포맷 등 공통 유틸
+│   ├── theme/        # AppColors, AppTextStyles, AppSpacing, AppTheme
+│   └── utils/        # 공통 유틸 (DebouncedNavigation 등)
 ├── data/
-│   ├── models/       # User, Schedule, Meal 등 데이터 모델
-│   ├── mock/         # ★ Phase 1 Mock 데이터 (mock_data.dart)
-│   └── repositories/ # 인터페이스만 정의 (구현은 Phase 2)
+│   ├── models/       # User, NoticeItem, ScheduleItem, MealData 등 데이터 모델
+│   └── repositories/ # Repository 인터페이스 및 Api 구현체 (ApiAuthRepository 등)
 ├── features/
-│   ├── auth/         # 학번 인증 화면
-│   ├── home/         # 메인 화면
-│   ├── timetable/    # 시간표 바텀시트
-│   ├── meal/         # 식단 바텀시트
-│   ├── notice/       # 공지사항
-│   └── settings/     # 설정 바텀시트
+│   ├── academic_calendar/ # 학사 일정
+│   ├── auth/         # 학번 인증
+│   ├── enrollment/   # 수강신청/과목 선택
+│   ├── grade_simulator/ # 학점 시뮬레이터
+│   ├── home/         # 메인 홈 화면 및 위젯
+│   ├── meal/         # 식단표 바텀시트
+│   ├── mypage/       # 마이페이지
+│   ├── notice/       # 공지사항 상세 및 번역
+│   ├── notification/ # 알림함 인박스
+│   ├── scholarship/  # 장학금 목록/상세
+│   ├── settings/     # 설정 바텀시트
+│   └── timetable/    # 주간 시간표 바텀시트
 └── shared/
-    ├── widgets/      # AppButton, AppTextField, UCHeader
-    └── providers/    # Riverpod 공통 provider
+    ├── providers/    # 공통 provider
+    └── widgets/      # AppButton, AppTextField, UCHeader, AppCard 등
 ```
 
 **규칙**: 다른 feature의 widget 직접 import 금지. 공통 위젯은 `shared/widgets/`로 이동.
@@ -64,15 +72,8 @@ lib/
 
 ---
 
-## 화면 목록
-| 라우트 | 화면 | 비고 |
-|---|---|---|
-| `/auth` | 학번 인증 | Phase 1: 학번 `2411206` 입력 시 성공 → `/home` |
-| `/home` | 메인 홈 | UCHeader + 배너 + 빠른실행 + 바로가기 + 공지 |
-| — | 시간표 Bottom Sheet | showModalBottomSheet, 최대 90% 높이 |
-| — | 식단 Bottom Sheet | 조식/중식/석식, 크림 배경 `#FFF8EE` |
-| — | 설정 Bottom Sheet | 알림·다크모드 Switch, 언어 Dropdown |
-| — | **마이페이지** | **⚠ 현재 빈 화면 — 반드시 전체 구현** |
+## 주요 특징 및 주의사항
+- **식단 날짜 임시 대응**: 백엔드 `/api/meal/today`가 아직 `date` 파라미터를 지원하지 않아, 오늘이 아닌 날짜 선택 시 프레임워크에서 `AppConstants.mealDateApiSupported` 플래그(`false`)를 기준으로 안내 화면을 제공함. (추후 백엔드가 날짜별 조회를 지원하면 상수를 `true`로 변경하면 즉시 연동됨)
 
 ---
 
@@ -81,10 +82,11 @@ lib/
 - UI 위젯에서 직접 데이터 처리 금지 → Notifier에 위임
 - `StatefulWidget` 최소화 → 상태 필요 시 `ConsumerWidget` 사용
 
-## Phase 2 전환 규칙
-- Phase 1에서 Repository는 **인터페이스만** 정의, 구현은 Mock으로
-- 교체 대상 코드에 반드시 주석: `// TODO(Phase 2): Mock → Api로 교체`
-- Phase 2 전환 시 `MockRepository` → `ApiRepository`만 교체
+---
+
+## Repository 패턴
+- `data/repositories/`에 추상 인터페이스(예: `AuthRepository`)와 Dio 기반 구현체(`ApiAuthRepository`) 분리
+- `shared/providers/app_providers.dart`를 통해 의존성 주입
 
 ---
 
@@ -100,40 +102,4 @@ lib/
 
 **주석 규칙**:
 - 파일 상단: `// 역할: 이 파일이 하는 일 한 줄`
-- 함수: 무엇을 하고 왜 이렇게 만들었는지
-- 변수명으로 의미가 명확하면 주석 생략
-
----
-
-## 개발 체크리스트
-```
-[ ] AppColors / AppTextStyles / AppSpacing 상수만 사용 (하드코딩 없음)
-[ ] Phase 1: Mock 데이터만 사용 (네트워크 호출 없음)
-[ ] 학번 입력: TextInputType.number 적용
-[ ] 모바일 학생증: qr_flutter 사용
-[ ] 외부 링크: url_launcher 사용
-[ ] 설정값: shared_preferences 저장
-[ ] 마이페이지: 빈 화면 아님, 전체 구현
-[ ] TODO(Phase 2) 주석 표시
-[ ] const 생성자 적용
-[ ] async 후 mounted 체크
-[ ] 아이콘 버튼: Semantics 또는 Tooltip 적용
-```
-
----
-
-## Claude 사용 시 토큰 절약
-**첨부 금지**: pubspec.lock, ios/, android/, .gitignore, .metadata
-
-관련 파일만 선택:
-- 식단 → `meal_sheet.dart`만
-- 라우터 → `app_router.dart`만
-- 인증 → `auth_screen.dart` + `auth_provider.dart`만
-
-새 채팅 시작 템플릿:
-```
-UC Info Flutter 앱 개발 중이야. (Phase 1 — UI + Mock)
-CLAUDE.md 참고해서 도와줘.
-지금 [작업 내용] 하려는데 관련 파일은 아래야.
-[파일 1~2개만]
-```
+- 클래스/메서드: 한글 Javadoc 및 Dartdoc (`///`) 작성

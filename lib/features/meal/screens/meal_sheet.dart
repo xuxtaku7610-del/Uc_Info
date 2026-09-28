@@ -13,6 +13,33 @@ import '../providers/meal_provider.dart';
 class MealSheet extends ConsumerWidget {
   const MealSheet({super.key});
 
+  Future<void> _pickDate(BuildContext context, WidgetRef ref, DateTime initialDate) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: AppColors.primary,
+              onPrimary: Colors.white,
+              surface: context.surface,
+              onSurface: context.textPrimary,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) {
+      ref.read(mealProvider.notifier).fetchMealByDate(picked);
+    }
+  }
+
+  String _formatDate(DateTime d) => '${d.year}년 ${d.month}월 ${d.day}일';
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(mealProvider);
@@ -31,36 +58,13 @@ class MealSheet extends ConsumerWidget {
                   const Text('식단표', style: AppTextStyles.heading2),
                   const Spacer(),
                   Text(
-                    '${state.requestedDate.year}년 ${state.requestedDate.month}월 ${state.requestedDate.day}일',
+                    _formatDate(state.requestedDate),
                     style: AppTextStyles.caption,
                   ),
                   const SizedBox(width: AppSpacing.xs),
                   IconButton(
                     icon: const Icon(Icons.calendar_month),
-                    onPressed: () async {
-                      final picked = await showDatePicker(
-                        context: context,
-                        initialDate: state.requestedDate,
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime(2030),
-                        builder: (context, child) {
-                          return Theme(
-                            data: Theme.of(context).copyWith(
-                              colorScheme: ColorScheme.light(
-                                primary: AppColors.primary,
-                                onPrimary: Colors.white,
-                                surface: context.surface,
-                                onSurface: context.textPrimary,
-                              ),
-                            ),
-                            child: child!,
-                          );
-                        },
-                      );
-                      if (picked != null) {
-                        ref.read(mealProvider.notifier).fetchMealByDate(picked);
-                      }
-                    },
+                    onPressed: () => _pickDate(context, ref, state.requestedDate),
                     constraints: const BoxConstraints(),
                     padding: EdgeInsets.zero,
                   ),
@@ -159,30 +163,7 @@ class MealSheet extends ConsumerWidget {
                 const SizedBox(width: AppSpacing.xs),
                 IconButton(
                   icon: const Icon(Icons.calendar_month),
-                  onPressed: () async {
-                    final picked = await showDatePicker(
-                      context: context,
-                      initialDate: state.requestedDate,
-                      firstDate: DateTime(2020),
-                      lastDate: DateTime(2030),
-                      builder: (context, child) {
-                        return Theme(
-                          data: Theme.of(context).copyWith(
-                            colorScheme: ColorScheme.light(
-                              primary: AppColors.primary,
-                              onPrimary: Colors.white,
-                              surface: context.surface,
-                              onSurface: context.textPrimary,
-                            ),
-                          ),
-                          child: child!,
-                        );
-                      },
-                    );
-                    if (picked != null) {
-                      ref.read(mealProvider.notifier).fetchMealByDate(picked);
-                    }
-                  },
+                  onPressed: () => _pickDate(context, ref, state.requestedDate),
                   constraints: const BoxConstraints(),
                   padding: EdgeInsets.zero,
                 ),

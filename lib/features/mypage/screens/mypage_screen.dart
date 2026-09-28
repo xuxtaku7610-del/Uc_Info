@@ -3,7 +3,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
@@ -87,12 +86,6 @@ class MypageScreen extends ConsumerWidget {
               // ── 4. 기타
               const _SectionHeader(title: '기타'),
               _MenuCard(children: [
-                _MenuItem(
-                  icon: Icons.translate,
-                  label: '공지사항 번역',
-                  onTap: () => context.pushOnce('/notice/translation'),
-                ),
-                const _ItemDivider(),
                 _MenuItem(
                   icon: Icons.privacy_tip_outlined,
                   label: '개인정보처리방침',
@@ -277,7 +270,7 @@ class _ItemDivider extends StatelessWidget {
   }
 }
 
-// ── 학생증 카드 (Phase 1: mockUser 제거)
+// ── 학생증 카드
 class _StudentCard extends StatelessWidget {
   final User user;
   const _StudentCard({required this.user});

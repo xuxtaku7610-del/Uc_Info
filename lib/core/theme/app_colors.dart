@@ -1,4 +1,3 @@
-// lib/core/theme/app_colors.dart
 // 역할: 앱 전역 색상 토큰. 모든 위젯에서 이 파일의 상수를 참조한다.
 
 import 'package:flutter/material.dart';
@@ -22,9 +21,7 @@ class AppColors {
 
   // Semantic
   static const Color error        = Color(0xFFE84040);
-  static const Color errorLight   = Color(0xFFFFF0F0);
   static const Color success      = Color(0xFF22C55E);
-  static const Color warning      = Color(0xFFFB923C);
 
   // 시간표 블록 색상 (주간 시간표 과목별 순환 배정)
   static const List<Color> timetableColors = [

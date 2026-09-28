@@ -23,7 +23,7 @@ class NoticeSection extends ConsumerWidget {
     final state = ref.watch(homeProvider);
     final category = _categories[state.selectedTabIndex];
 
-    // 가짜 데이터(mockNotices) 대신 Provider가 관리하는 실제 데이터(state.notices)를 필터링
+    // Provider가 관리하는 공지 목록(state.notices)을 필터링
     final filtered = state.notices.where((n) => n.category == category).toList();
 
     return AppCard(
