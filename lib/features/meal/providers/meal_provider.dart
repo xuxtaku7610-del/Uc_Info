@@ -1,9 +1,12 @@
 // 역할: 식단표 상태 관리 및 날짜별 식단 조회 프로바이더
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:university_portal_flutter/core/constants/app_constants.dart';
 import '../../../data/models/meal_data.dart';
 import '../../../data/repositories/meal_repository.dart';
 import '../../../shared/providers/app_providers.dart';
+
+bool _isSameDay(DateTime a, DateTime b) => a.year == b.year && a.month == b.month && a.day == b.day;
 
 class MealState {
   final MealData? meal;
@@ -19,6 +22,8 @@ class MealState {
   }) : requestedDate = requestedDate != null
             ? DateTime(requestedDate.year, requestedDate.month, requestedDate.day)
             : DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+
+  bool get isUnsupportedDate => !AppConstants.mealDateApiSupported && !_isSameDay(requestedDate, DateTime.now());
 
   MealState copyWith({
     MealData? meal,
@@ -44,6 +49,11 @@ class MealNotifier extends StateNotifier<MealState> {
 
   Future<void> fetchMealByDate(DateTime date) async {
     final normalizedDate = DateTime(date.year, date.month, date.day);
+    if (!AppConstants.mealDateApiSupported && !_isSameDay(normalizedDate, DateTime.now())) {
+      state = state.copyWith(requestedDate: normalizedDate, isLoading: false, errorMessage: null);
+      return;
+    }
+
     state = state.copyWith(requestedDate: normalizedDate, isLoading: true, errorMessage: null);
     try {
       final meal = await _repository.getMealByDate(normalizedDate);
@@ -57,6 +67,7 @@ class MealNotifier extends StateNotifier<MealState> {
   }
 
   Future<void> refreshCurrent() async {
+    if (state.isUnsupportedDate) return;
     final meal = await _repository.getMealByDate(state.requestedDate);
     state = state.copyWith(meal: meal);
   }

@@ -17,6 +17,76 @@ class MealSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(mealProvider);
 
+    if (state.isUnsupportedDate) {
+      return SizedBox(
+        height: 380,
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          child: Column(
+            children: [
+              const Center(child: AppDragHandle()),
+              const SizedBox(height: AppSpacing.md),
+              Row(
+                children: [
+                  const Text('식단표', style: AppTextStyles.heading2),
+                  const Spacer(),
+                  Text(
+                    '${state.requestedDate.year}년 ${state.requestedDate.month}월 ${state.requestedDate.day}일',
+                    style: AppTextStyles.caption,
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  IconButton(
+                    icon: const Icon(Icons.calendar_month),
+                    onPressed: () async {
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: state.requestedDate,
+                        firstDate: DateTime(2020),
+                        lastDate: DateTime(2030),
+                        builder: (context, child) {
+                          return Theme(
+                            data: Theme.of(context).copyWith(
+                              colorScheme: ColorScheme.light(
+                                primary: AppColors.primary,
+                                onPrimary: Colors.white,
+                                surface: context.surface,
+                                onSurface: context.textPrimary,
+                              ),
+                            ),
+                            child: child!,
+                          );
+                        },
+                      );
+                      if (picked != null) {
+                        ref.read(mealProvider.notifier).fetchMealByDate(picked);
+                      }
+                    },
+                    constraints: const BoxConstraints(),
+                    padding: EdgeInsets.zero,
+                  ),
+                ],
+              ),
+              const Spacer(),
+              const Icon(Icons.event_busy_outlined, size: 48, color: Colors.grey),
+              const SizedBox(height: AppSpacing.md),
+              Text('해당 날짜의 식단은 아직 제공되지 않습니다.', style: AppTextStyles.body1.copyWith(color: context.textPrimary)),
+              const SizedBox(height: AppSpacing.xs),
+              Text('오늘 식단만 조회할 수 있어요.', style: AppTextStyles.caption.copyWith(color: context.textHint)),
+              const Spacer(),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => ref.read(mealProvider.notifier).fetchMealByDate(DateTime.now()),
+                  child: const Text('오늘 식단 보기'),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+            ],
+          ),
+        ),
+      );
+    }
+
     if (state.isLoading) {
       return const SizedBox(
         height: 300,
@@ -76,90 +146,80 @@ class MealSheet extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          // 드래그 핸들
-          const Center(child: AppDragHandle()),
-          const SizedBox(height: AppSpacing.md),
+            // 드래그 핸들
+            const Center(child: AppDragHandle()),
+            const SizedBox(height: AppSpacing.md),
 
-          // 헤더
-          Row(
-            children: [
-              Text('오늘의 식단', style: AppTextStyles.heading2),
-              const Spacer(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(meal.date, style: AppTextStyles.caption),
-                  // 백엔드가 date 파라미터 지원 시작하면 두 값이 일치하게 됨, 그때 이 보조 텍스트는 제거 가능
-                  Text(
-                    '요청: ${state.requestedDate.year}-${state.requestedDate.month.toString().padLeft(2, '0')}-${state.requestedDate.day.toString().padLeft(2, '0')}',
-                    style: AppTextStyles.caption.copyWith(color: context.textHint, fontSize: 10),
-                  ),
-                ],
-              ),
-              const SizedBox(width: AppSpacing.xs),
-              IconButton(
-                icon: const Icon(Icons.calendar_month),
-                onPressed: () async {
-                  final picked = await showDatePicker(
-                    context: context,
-                    initialDate: state.requestedDate,
-                    firstDate: DateTime(2020),
-                    lastDate: DateTime(2030),
-                    builder: (context, child) {
-                      return Theme(
-                        data: Theme.of(context).copyWith(
-                          colorScheme: ColorScheme.light(
-                            primary: AppColors.primary,
-                            onPrimary: Colors.white,
-                            surface: context.surface,
-                            onSurface: context.textPrimary,
+            // 헤더
+            Row(
+              children: [
+                Text('오늘의 식단', style: AppTextStyles.heading2),
+                const Spacer(),
+                Text(meal.date, style: AppTextStyles.caption),
+                const SizedBox(width: AppSpacing.xs),
+                IconButton(
+                  icon: const Icon(Icons.calendar_month),
+                  onPressed: () async {
+                    final picked = await showDatePicker(
+                      context: context,
+                      initialDate: state.requestedDate,
+                      firstDate: DateTime(2020),
+                      lastDate: DateTime(2030),
+                      builder: (context, child) {
+                        return Theme(
+                          data: Theme.of(context).copyWith(
+                            colorScheme: ColorScheme.light(
+                              primary: AppColors.primary,
+                              onPrimary: Colors.white,
+                              surface: context.surface,
+                              onSurface: context.textPrimary,
+                            ),
                           ),
-                        ),
-                        child: child!,
-                      );
-                    },
-                  );
-                  if (picked != null) {
-                    ref.read(mealProvider.notifier).fetchMealByDate(picked);
-                  }
-                },
-                constraints: const BoxConstraints(),
-                padding: EdgeInsets.zero,
+                          child: child!,
+                        );
+                      },
+                    );
+                    if (picked != null) {
+                      ref.read(mealProvider.notifier).fetchMealByDate(picked);
+                    }
+                  },
+                  constraints: const BoxConstraints(),
+                  padding: EdgeInsets.zero,
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+
+            // 조식 / 중식 / 석식
+            _buildMealCard(context, '조식', meal.breakfast),
+            const SizedBox(height: AppSpacing.sm),
+            _buildMealCard(context, '중식', meal.lunch),
+            const SizedBox(height: AppSpacing.sm),
+            _buildMealCard(context, '석식', meal.dinner),
+            const SizedBox(height: AppSpacing.md),
+
+            // 알레르기 안내
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(AppSpacing.sm),
+              decoration: BoxDecoration(
+                color: AppColors.accent.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                border: Border.all(
+                  color: AppColors.accent.withValues(alpha: 0.5),
+                ),
               ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.md),
-
-          // 조식 / 중식 / 석식
-          _buildMealCard(context, '조식', meal.breakfast),
-          const SizedBox(height: AppSpacing.sm),
-          _buildMealCard(context, '중식', meal.lunch),
-          const SizedBox(height: AppSpacing.sm),
-          _buildMealCard(context, '석식', meal.dinner),
-          const SizedBox(height: AppSpacing.md),
-
-          // 알레르기 안내
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(AppSpacing.sm),
-            decoration: BoxDecoration(
-              color: AppColors.accent.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-              border: Border.all(
-                color: AppColors.accent.withValues(alpha: 0.5),
+              child: Text(
+                '⚠️  알레르기 유발식품 안내: 식단에 포함된 알레르기 성분은 학생식당 게시판을 확인해주세요.',
+                style:
+                    AppTextStyles.caption.copyWith(color: context.textPrimary),
               ),
             ),
-            child: Text(
-              '⚠️  알레르기 유발식품 안내: 식단에 포함된 알레르기 성분은 학생식당 게시판을 확인해주세요.',
-              style:
-                  AppTextStyles.caption.copyWith(color: context.textPrimary),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildMealCard(BuildContext context, String label, MealSection? section) {
     if (section == null) {
