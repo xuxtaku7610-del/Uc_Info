@@ -26,7 +26,7 @@ class ApiNoticeRepository implements NoticeRepository {
         throw Exception('데이터 형식이 올바르지 않습니다.');
       }
     } on DioException catch (e) {
-      throw Exception(extractErrorMessage(e, '공지사항 목록 불러오기 실패: ${e.message}'));
+      throw Exception(extractErrorMessage(e, '공지사항 목록을 불러오지 못했습니다.'));
     }
   }
 
@@ -37,7 +37,7 @@ class ApiNoticeRepository implements NoticeRepository {
 
       return NoticeItem.fromJson(response.data);
     } on DioException catch (e) {
-      throw Exception(extractErrorMessage(e, '공지사항 상세 불러오기 실패: ${e.message}'));
+      throw Exception(extractErrorMessage(e, '공지사항 상세 정보를 불러오지 못했습니다.'));
     }
   }
 
@@ -49,7 +49,7 @@ class ApiNoticeRepository implements NoticeRepository {
         data: {'studentId': studentId},
       );
     } on DioException catch (e) {
-      throw Exception(extractErrorMessage(e, '읽음 처리 실패: ${e.message}'));
+      throw Exception(extractErrorMessage(e, '읽음 처리에 실패했습니다.'));
     }
   }
 }

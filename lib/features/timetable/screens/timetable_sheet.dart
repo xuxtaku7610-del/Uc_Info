@@ -88,18 +88,22 @@ class TimetableSheet extends ConsumerWidget {
                             ],
                           ),
                         )
-                      : SingleChildScrollView(
-                          controller: scrollController,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.md, vertical: 4),
-                          child: state.schedule.isEmpty
-                              ? const Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(top: 100),
-                                    child: Text('시간표 정보가 없습니다.'),
-                                  ),
-                                )
-                              : _TimetableGrid(schedule: state.schedule),
+                      : RefreshIndicator(
+                          onRefresh: () => ref.read(timetableProvider.notifier).fetchWeeklySchedule(),
+                          child: SingleChildScrollView(
+                            controller: scrollController,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.md, vertical: 4),
+                            child: state.schedule.isEmpty
+                                ? const Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(top: 100),
+                                      child: Text('시간표 정보가 없습니다.'),
+                                    ),
+                                  )
+                                : _TimetableGrid(schedule: state.schedule),
+                          ),
                         ),
             ),
           ],
@@ -249,10 +253,10 @@ class _TimetableGrid extends ConsumerWidget {
                         children: [
                           Text(
                             item.subject,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w700,
-                              color: context.textPrimary,
+                              color: AppColors.timetableBlockText,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -260,9 +264,9 @@ class _TimetableGrid extends ConsumerWidget {
                           if (height > 70)
                             Text(
                               item.room,
-                              style: TextStyle(
+                              style: const TextStyle(
                               fontSize: 9,
-                              color: context.textSecondary,
+                              color: AppColors.timetableBlockTextSecondary,
                             ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,

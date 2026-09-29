@@ -1,4 +1,3 @@
-// lib/core/theme/app_colors.dart
 // 역할: 앱 전역 색상 토큰. 모든 위젯에서 이 파일의 상수를 참조한다.
 
 import 'package:flutter/material.dart';
@@ -22,9 +21,7 @@ class AppColors {
 
   // Semantic
   static const Color error        = Color(0xFFE84040);
-  static const Color errorLight   = Color(0xFFFFF0F0);
   static const Color success      = Color(0xFF22C55E);
-  static const Color warning      = Color(0xFFFB923C);
 
   // 시간표 블록 색상 (주간 시간표 과목별 순환 배정)
   static const List<Color> timetableColors = [
@@ -35,6 +32,18 @@ class AppColors {
     Color(0xFFFFB4C2), // 핑크
     Color(0xFFC8F5A0), // 연두
   ];
+
+  // 시간표 블록 내부 텍스트용 고정 색상 (다크모드에서도 가독성 확보)
+  static const Color timetableBlockText = Color(0xFF1A1A2E);
+  static const Color timetableBlockTextSecondary = Color(0xFF6B7280);
+
+  // 학사일정 카테고리 색상
+  static const Color calendarAcademic     = Colors.blue;
+  static const Color calendarExam         = Colors.red;
+  static const Color calendarRegistration = Colors.green;
+  static const Color calendarVacation     = Colors.orange;
+  static const Color calendarEvent        = Colors.purple;
+  static const Color calendarEtc          = Colors.grey;
 }
 
 extension AppColorsX on BuildContext {

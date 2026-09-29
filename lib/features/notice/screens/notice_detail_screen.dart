@@ -9,6 +9,7 @@ import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
 import 'package:university_portal_flutter/data/models/notice_item.dart';
 import 'package:university_portal_flutter/features/auth/providers/user_provider.dart';
+import 'package:university_portal_flutter/features/notification/providers/notice_inbox_provider.dart';
 import 'package:university_portal_flutter/shared/providers/app_providers.dart';
 
 class NoticeDetailScreen extends ConsumerStatefulWidget {
@@ -39,6 +40,8 @@ class _NoticeDetailScreenState extends ConsumerState<NoticeDetailScreen> {
       // 혹시라도 아직 user 로딩 전이라면 listener를 통해 로딩 완료 시점에 재시도하도록 구성 가능
       debugPrint('Warning: studentId is null, marking as read skipped.');
     }
+    // 로컬 알림함에서도 읽음 처리
+    ref.read(noticeInboxProvider.notifier).markEntrySeen(widget.noticeId);
   }
 
   // 카테고리 키 → 한국어 레이블 (백엔드 대문자 규격에 맞춤)
@@ -116,7 +119,7 @@ class _NoticeDetailScreenState extends ConsumerState<NoticeDetailScreen> {
             Text(notice.title, style: AppTextStyles.heading2),
             const SizedBox(height: AppSpacing.md),
 
-            const Divider(color: Colors.grey),
+            Divider(color: context.divider),
             const SizedBox(height: AppSpacing.md),
 
             // 본문
@@ -127,25 +130,7 @@ class _NoticeDetailScreenState extends ConsumerState<NoticeDetailScreen> {
                 color: context.textPrimary,
               ),
             ),
-            const SizedBox(height: AppSpacing.lg),
-
-            // 영어 번역 화면 진입 버튼 (외국인 유학생을 위한 한→영 번역)
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: () => context.push('/notice/translation'),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.primary,
-                  side: const BorderSide(color: AppColors.primary),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-                ),
-                icon: const Icon(Icons.translate),
-                label: const Text('Translate to English 🌐', style: AppTextStyles.buttonText),
-              ),
-            ),
+            const SizedBox(height: AppSpacing.xl),
           ],
         ),
       ),

@@ -69,11 +69,15 @@ Future<T?> showAppBottomSheet<T>(
   return showModalBottomSheet<T>(
     context: context,
     isScrollControlled: isScrollControlled,
+    useSafeArea: true,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(AppSpacing.radiusLg),
       ),
     ),
-    builder: builder,
+    builder: (context) => SafeArea(
+      top: false,
+      child: builder(context),
+    ),
   );
 }

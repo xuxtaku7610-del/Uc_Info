@@ -45,7 +45,11 @@ class ApiScholarshipRepository implements ScholarshipRepository {
     try {
       final response = await _apiClient.dio.get('/api/scholarships/$id');
 
-      return Scholarship.fromJson(response.data);
+      try {
+        return Scholarship.fromJson(response.data);
+      } catch (e) {
+        throw Exception('데이터 형식이 올바르지 않습니다.');
+      }
     } on DioException catch (e) {
       throw Exception(extractErrorMessage(e, '장학금 상세 정보를 불러오지 못했습니다.'));
     }

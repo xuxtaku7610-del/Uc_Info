@@ -11,16 +11,49 @@ import 'package:university_portal_flutter/features/home/widgets/quick_action_sec
 import 'package:university_portal_flutter/features/home/widgets/shortcut_grid.dart';
 import 'package:university_portal_flutter/features/home/widgets/student_banner.dart';
 import 'package:university_portal_flutter/features/home/widgets/banner_carousel.dart';
+import 'package:university_portal_flutter/features/home/providers/banner_provider.dart';
+import 'package:university_portal_flutter/features/home/providers/home_provider.dart';
 import 'package:university_portal_flutter/features/auth/providers/user_provider.dart';
+import 'package:university_portal_flutter/features/notification/providers/notice_inbox_provider.dart';
+import 'package:university_portal_flutter/features/notification/screens/notice_inbox_sheet.dart';
 import 'package:university_portal_flutter/features/settings/screens/settings_sheet.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 import 'package:university_portal_flutter/shared/widgets/uc_header.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    // 앱 시작 시 공지 업데이트 체크
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(noticeInboxProvider.notifier).checkForUpdates();
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // 앱 복귀 시 공지 업데이트 체크
+      ref.read(noticeInboxProvider.notifier).checkForUpdates();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final userState = ref.watch(userProvider);
 
     return Scaffold(
@@ -32,47 +65,62 @@ class HomeScreen extends ConsumerWidget {
           (_) => const SettingsSheet(),
           isScrollControlled: true,
         ),
+        showNotificationBell: true,
+        onNotificationTap: () => showAppBottomSheet<void>(
+          context,
+          (_) => const NoticeInboxSheet(),
+          isScrollControlled: true,
+        ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: AppSpacing.sm,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // ── 1. 학생 인사 배너
-              if (userState.isLoading)
-                const SizedBox(
-                  height: 120,
-                  child: Center(child: CircularProgressIndicator()),
-                )
-              else if (userState.user != null)
-                StudentBanner(user: userState.user!)
-              else
+        child: RefreshIndicator(
+          onRefresh: () => Future.wait([
+            ref.read(userProvider.notifier).fetchMe(),
+            ref.read(bannerProvider.notifier).fetchBanners(),
+            ref.read(homeProvider.notifier).fetchNotices(),
+            ref.read(noticeInboxProvider.notifier).checkForUpdates(),
+          ]),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.sm,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // ── 1. 학생 인사 배너
+                if (userState.isLoading)
+                  const SizedBox(
+                    height: 120,
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else if (userState.user != null)
+                  StudentBanner(user: userState.user!)
+                else
+                  const SizedBox(height: AppSpacing.sm),
+
+                // ── 1-1. 공지 배너 캐러셀
+                const SizedBox(height: AppSpacing.md),
+                const BannerCarousel(),
+
+                // ── 2. 빠른 실행 (시간표 · 식단표)
+                const SizedBox(height: AppSpacing.lg),
+                Text('빠른 실행', style: AppTextStyles.heading3),
                 const SizedBox(height: AppSpacing.sm),
+                const QuickActionSection(),
 
-              // ── 1-1. 공지 배너 캐러셀
-              const SizedBox(height: AppSpacing.md),
-              const BannerCarousel(),
+                // ── 3. 바로가기 8개 그리드
+                const SizedBox(height: AppSpacing.lg),
+                const ShortcutGrid(),
 
-              // ── 2. 빠른 실행 (시간표 · 식단표)
-              const SizedBox(height: AppSpacing.lg),
-              Text('빠른 실행', style: AppTextStyles.heading3),
-              const SizedBox(height: AppSpacing.sm),
-              const QuickActionSection(),
+                // ── 4. 공지사항 탭 + 리스트
+                const SizedBox(height: AppSpacing.lg),
+                const NoticeSection(),
 
-              // ── 3. 바로가기 8개 그리드
-              const SizedBox(height: AppSpacing.lg),
-              const ShortcutGrid(),
-
-              // ── 4. 공지사항 탭 + 리스트
-              const SizedBox(height: AppSpacing.lg),
-              const NoticeSection(),
-
-              const SizedBox(height: AppSpacing.xl),
-            ],
+                const SizedBox(height: AppSpacing.xl),
+              ],
+            ),
           ),
         ),
       ),

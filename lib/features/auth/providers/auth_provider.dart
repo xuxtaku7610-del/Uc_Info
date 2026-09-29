@@ -1,11 +1,9 @@
-// lib/features/auth/providers/auth_provider.dart
 // 역할: 학번 인증 상태를 관리하는 StateNotifier.
 // 인증 성공 시 AuthState.isSuccess = true, 실패 시 각 필드 에러 표시.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:university_portal_flutter/data/repositories/auth_repository.dart';
 import 'package:university_portal_flutter/features/auth/providers/auth_session_provider.dart';
-import 'package:university_portal_flutter/data/repositories/api_auth_repository.dart';
 import 'package:university_portal_flutter/shared/providers/app_providers.dart';
 
 class AuthState {
@@ -38,7 +36,7 @@ class AuthState {
 }
 
 // 학번 인증 상태를 관리하는 StateNotifier.
-// 인증 성공 시 true 반환, 실패(유효성 오류·Mock 불일치) 시 false 반환.
+// 인증 성공 시 true 반환, 실패(유효성 오류·서버 검증 실패) 시 false 반환.
 class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier({required AuthRepository repository, required Ref ref})
       : _repository = repository,
@@ -56,8 +54,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
     // 유효성 검사: 버튼 탭 시 전체 필드 동시 검사
     final nameErr = name.trim().length < 2 ? '이름을 입력해주세요.' : null;
     final deptErr = department.trim().isEmpty ? '학과를 입력해주세요.' : null;
-    final idErr = !RegExp(r'^\d{7}$').hasMatch(studentId.trim())
-        ? '학번 7자리를 입력해주세요.'
+    final idErr = studentId.trim().isEmpty
+        ? '학번을 입력해주세요.'
         : null;
 
     state = state.copyWith(

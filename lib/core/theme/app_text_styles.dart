@@ -1,8 +1,6 @@
-// lib/core/theme/app_text_styles.dart
 // 역할: 앱 전역 텍스트 스타일 토큰. 기본 폰트는 Pretendard (한국어 최적화).
 
 import 'package:flutter/material.dart';
-import 'package:university_portal_flutter/core/theme/app_colors.dart';
 
 class AppTextStyles {
   static const TextStyle heading1  = TextStyle(fontSize: 22, fontWeight: FontWeight.w700);

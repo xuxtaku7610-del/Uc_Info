@@ -9,6 +9,7 @@ import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
 import 'package:university_portal_flutter/features/home/providers/home_provider.dart';
 import 'package:university_portal_flutter/data/models/notice_item.dart';
+import 'package:university_portal_flutter/shared/utils/debounced_navigation.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 
 const _tabs = ['학사', '학과공지', '행사', '장학금', '취업'];
@@ -22,7 +23,7 @@ class NoticeSection extends ConsumerWidget {
     final state = ref.watch(homeProvider);
     final category = _categories[state.selectedTabIndex];
 
-    // 가짜 데이터(mockNotices) 대신 Provider가 관리하는 실제 데이터(state.notices)를 필터링
+    // Provider가 관리하는 공지 목록(state.notices)을 필터링
     final filtered = state.notices.where((n) => n.category == category).toList();
 
     return AppCard(
@@ -131,7 +132,7 @@ class _NoticeListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => context.push(
+      onTap: () => context.pushOnce(
         '/notice/${notice.id}',
         extra: notice,
       ),

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/network/api_client.dart';
 import '../../core/network/token_storage.dart';
 import '../../core/network/api_exception_util.dart';
@@ -34,9 +35,13 @@ class ApiAuthRepository implements AuthRepository {
       }
       await TokenStorage.saveToken(token);
 
+      // 계정별 데이터 관리를 위해 현재 학번 저장
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('current_student_id', user.studentId);
+
       return user;
     } on DioException catch (e) {
-      throw Exception(extractErrorMessage(e, '학생 인증 실패: ${e.message}'));
+      throw Exception(extractErrorMessage(e, '학생 인증에 실패했습니다.'));
     } catch (e) {
       throw Exception('알 수 없는 오류가 발생했습니다: $e');
     }
@@ -51,7 +56,7 @@ class ApiAuthRepository implements AuthRepository {
       if (e.response?.statusCode == 401) {
         return null;
       }
-      throw Exception(extractErrorMessage(e, '내 정보 불러오기 실패: ${e.message}'));
+      throw Exception(extractErrorMessage(e, '내 정보를 불러오지 못했습니다.'));
     }
   }
 }

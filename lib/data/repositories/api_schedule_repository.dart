@@ -21,12 +21,14 @@ class ApiScheduleRepository implements ScheduleRepository {
       final List<dynamic> data = rawData;
 
       try {
-        return data.map((json) => ScheduleItem.fromJson(json)).toList();
+        return data.asMap().entries.map((entry) {
+          return ScheduleItem.fromJson(entry.value, index: entry.key);
+        }).toList();
       } catch (e) {
         throw Exception('데이터 형식이 올바르지 않습니다.');
       }
     } on DioException catch (e) {
-      throw Exception(extractErrorMessage(e, '시간표 정보 불러오기 실패: ${e.message}'));
+      throw Exception(extractErrorMessage(e, '시간표 정보를 불러오지 못했습니다.'));
     }
   }
 }

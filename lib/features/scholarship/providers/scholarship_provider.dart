@@ -67,3 +67,9 @@ final scholarshipListProvider =
   final repository = ref.watch(scholarshipRepositoryProvider);
   return ScholarshipListNotifier(repository);
 });
+
+final scholarshipDetailProvider =
+    FutureProvider.autoDispose.family<Scholarship, int>((ref, id) {
+  final repository = ref.watch(scholarshipRepositoryProvider);
+  return repository.getScholarshipDetail(id);
+});

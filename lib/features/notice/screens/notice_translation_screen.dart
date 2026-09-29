@@ -17,9 +17,7 @@ class NoticeTranslationScreen extends StatefulWidget {
 }
 
 class _NoticeTranslationScreenState extends State<NoticeTranslationScreen> {
-  // why: Phase 1에서는 Mock 구현체를 직접 사용하고, Phase 2에서는
-  //      ApiTranslationRepository로 교체하면 된다 (TODO 주석 참고).
-  // TODO(Phase 2): 추후 제공될 API Repository로 교체
+  // 번역 API가 아직 연결되지 않아 null 상태. Repository 구현체가 준비되면 주입한다.
   final TranslationRepository? _translationRepository = null;
 
   // 화면에 보여줄 하드코딩된 원본 공지사항 (제목/본문)

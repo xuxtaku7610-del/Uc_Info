@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
+import 'package:university_portal_flutter/shared/utils/debounced_navigation.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
@@ -65,7 +66,7 @@ class _ShortcutButton extends StatelessWidget {
 
   Future<void> _handleTap(BuildContext context) async {
     if (item.route != null) {
-      context.push(item.route!);
+      context.pushOnce(item.route!);
     } else if (item.url != null) {
       final uri = Uri.parse(item.url!);
       final opened = await launchUrl(uri, mode: LaunchMode.inAppWebView);

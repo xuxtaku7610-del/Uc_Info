@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
+import 'package:university_portal_flutter/shared/widgets/empty_state.dart';
 import '../providers/course_picker_provider.dart';
 import '../../../data/models/course_offering.dart';
 
@@ -28,9 +29,14 @@ class CoursePickerScreen extends ConsumerWidget {
           ? const Center(child: CircularProgressIndicator())
           : state.errorMessage != null
               ? Center(child: Text(state.errorMessage!))
-              : RefreshIndicator(
-                  onRefresh: () => ref.read(coursePickerProvider.notifier).fetchAvailableCourses(),
-                  child: ListView.builder(
+              : state.courses.isEmpty
+                  ? const EmptyStateWidget(
+                      message: '수강 신청 가능한 과목이 없습니다.',
+                      icon: Icons.list_alt_outlined,
+                    )
+                  : RefreshIndicator(
+                      onRefresh: () => ref.read(coursePickerProvider.notifier).fetchAvailableCourses(),
+                      child: ListView.builder(
                     padding: const EdgeInsets.all(AppSpacing.md),
                     itemCount: state.courses.length,
                     itemBuilder: (context, index) {
@@ -51,39 +57,41 @@ class CoursePickerScreen extends ConsumerWidget {
   Widget _buildBottomBar(BuildContext context, WidgetRef ref, CoursePickerState state) {
     if (state.courses.isEmpty || state.isLoading) return const SizedBox.shrink();
 
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: context.surface,
-        border: Border(top: BorderSide(color: context.divider)),
-      ),
-      child: ElevatedButton(
-        onPressed: state.selectedCourseIds.isEmpty || state.isSubmitting
-            ? null
-            : () async {
-                final result = await ref.read(coursePickerProvider.notifier).submitEnrollments();
-                if (context.mounted) {
-                  final s = result['success'] as int;
-                  final f = result['fail'] as int;
-                  final lastError = result['lastError'] as String?;
-                  final message = f == 0
-                      ? '신청 완료: $s개 성공'
-                      : '신청 완료: $s개 성공, $f개 실패${lastError != null ? '\n($lastError)' : ''}';
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(message)),
-                  );
-                  if (f == 0) Navigator.pop(context);
-                }
-              },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
-          foregroundColor: Colors.white,
-          minimumSize: const Size(double.infinity, 48),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd)),
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          color: context.surface,
+          border: Border(top: BorderSide(color: context.divider)),
         ),
-        child: state.isSubmitting
-            ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-            : Text('${state.selectedCourseIds.length}과목 신청하기', style: AppTextStyles.buttonText),
+        child: ElevatedButton(
+          onPressed: state.selectedCourseIds.isEmpty || state.isSubmitting
+              ? null
+              : () async {
+                  final result = await ref.read(coursePickerProvider.notifier).submitEnrollments();
+                  if (context.mounted) {
+                    final s = result['success'] as int;
+                    final f = result['fail'] as int;
+                    final lastError = result['lastError'] as String?;
+                    final message = f == 0
+                        ? '신청 완료: $s개 성공'
+                        : '신청 완료: $s개 성공, $f개 실패${lastError != null ? '\n($lastError)' : ''}';
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(message)),
+                    );
+                    if (f == 0) Navigator.pop(context);
+                  }
+                },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            foregroundColor: Colors.white,
+            minimumSize: const Size(double.infinity, 48),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd)),
+          ),
+          child: state.isSubmitting
+              ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+              : Text('${state.selectedCourseIds.length}과목 신청하기', style: AppTextStyles.buttonText),
+        ),
       ),
     );
   }
@@ -99,6 +107,7 @@ class _CourseListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: context.surface,
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),

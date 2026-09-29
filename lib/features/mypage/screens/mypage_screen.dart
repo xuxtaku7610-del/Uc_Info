@@ -3,7 +3,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:university_portal_flutter/core/theme/app_colors.dart';
 import 'package:university_portal_flutter/core/theme/app_spacing.dart';
 import 'package:university_portal_flutter/core/theme/app_text_styles.dart';
@@ -12,6 +11,7 @@ import 'package:university_portal_flutter/features/auth/providers/auth_session_p
 import 'package:university_portal_flutter/features/auth/providers/user_provider.dart';
 import 'package:university_portal_flutter/features/home/widgets/student_banner.dart';
 import 'package:university_portal_flutter/features/settings/providers/settings_provider.dart';
+import 'package:university_portal_flutter/shared/utils/debounced_navigation.dart';
 import 'package:university_portal_flutter/shared/widgets/common_widgets.dart';
 
 class MypageScreen extends ConsumerWidget {
@@ -42,7 +42,7 @@ class MypageScreen extends ConsumerWidget {
                 _MenuItem(
                   icon: Icons.bar_chart_outlined,
                   label: '성적 확인',
-                  onTap: () => context.push('/grade-simulator'),
+                  onTap: () => context.pushOnce('/grade-simulator'),
                 ),
               ]),
 
@@ -87,15 +87,9 @@ class MypageScreen extends ConsumerWidget {
               const _SectionHeader(title: '기타'),
               _MenuCard(children: [
                 _MenuItem(
-                  icon: Icons.translate,
-                  label: '공지사항 번역',
-                  onTap: () => context.push('/notice/translation'),
-                ),
-                const _ItemDivider(),
-                _MenuItem(
                   icon: Icons.privacy_tip_outlined,
                   label: '개인정보처리방침',
-                  onTap: () => context.push('/privacy-policy'),
+                  onTap: () => context.pushOnce('/privacy-policy'),
                 ),
                 const _ItemDivider(),
                 _MenuItem(
@@ -276,7 +270,7 @@ class _ItemDivider extends StatelessWidget {
   }
 }
 
-// ── 학생증 카드 (Phase 1: mockUser 제거)
+// ── 학생증 카드
 class _StudentCard extends StatelessWidget {
   final User user;
   const _StudentCard({required this.user});
@@ -322,25 +316,34 @@ class _StudentCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(user.name, style: AppTextStyles.heading2),
-                  const SizedBox(height: 2),
-                  Text(
-                    '${user.department} ${user.year}학년',
-                    style: AppTextStyles.body2.copyWith(
-                      color: context.textSecondary,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      user.name,
+                      style: AppTextStyles.heading2,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    user.studentId,
-                    style: AppTextStyles.caption.copyWith(
-                      color: context.textHint,
+                    const SizedBox(height: 2),
+                    Text(
+                      '${user.department} ${user.year}학년',
+                      style: AppTextStyles.body2.copyWith(
+                        color: context.textSecondary,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 2),
+                    Text(
+                      user.studentId,
+                      style: AppTextStyles.caption.copyWith(
+                        color: context.textHint,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

@@ -23,6 +23,16 @@ class UniversityPortalApp extends ConsumerWidget {
       darkTheme: AppTheme.dark(),
       themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
       routerConfig: router,
+      builder: (context, child) {
+        final clampedScaler = MediaQuery.textScalerOf(context).clamp(
+          minScaleFactor: 0.85,
+          maxScaleFactor: 1.3,
+        );
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaler: clampedScaler),
+          child: child!,
+        );
+      },
     );
   }
 }
