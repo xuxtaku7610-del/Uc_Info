@@ -17,6 +17,17 @@ class NoticeInboxEntry {
     this.seen = false,
   });
 
+  static const _categoryLabels = {
+    'ACADEMIC': '학사',
+    'DEPARTMENT': '학과공지',
+    'EVENT': '행사',
+    'SCHOLARSHIP': '장학금',
+    'EMPLOYMENT': '취업',
+  };
+
+  /// 화면에 표시할 한국어 카테고리명. 알 수 없는 값은 원문 그대로 반환한다.
+  String get categoryLabel => _categoryLabels[category] ?? category;
+
   NoticeInboxEntry copyWith({bool? seen}) {
     return NoticeInboxEntry(
       noticeId: noticeId,

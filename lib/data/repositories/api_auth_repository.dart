@@ -43,7 +43,7 @@ class ApiAuthRepository implements AuthRepository {
     } on DioException catch (e) {
       throw Exception(extractErrorMessage(e, '학생 인증에 실패했습니다.'));
     } catch (e) {
-      throw Exception('알 수 없는 오류가 발생했습니다: $e');
+      throw Exception('알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
     }
   }
 

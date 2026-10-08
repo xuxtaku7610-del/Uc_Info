@@ -86,7 +86,7 @@ class NoticeInboxSheet extends ConsumerWidget {
                           subtitle: Row(
                             children: [
                               Text(
-                                entry.category,
+                                entry.categoryLabel,
                                 style: AppTextStyles.caption.copyWith(color: Colors.blue),
                               ),
                               const SizedBox(width: 8),
