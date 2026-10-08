@@ -157,7 +157,7 @@ class MealSheet extends ConsumerWidget {
             // 헤더
             Row(
               children: [
-                Text('오늘의 식단', style: AppTextStyles.heading2),
+                Text('식단표', style: AppTextStyles.heading2),
                 const Spacer(),
                 Text(meal.date, style: AppTextStyles.caption),
                 const SizedBox(width: AppSpacing.xs),
@@ -217,7 +217,7 @@ class MealSheet extends ConsumerWidget {
           children: [
             Text(label, style: AppTextStyles.heading3.copyWith(color: context.textHint)),
             const SizedBox(height: AppSpacing.sm),
-            const Text('오늘은 운영하지 않습니다.', style: AppTextStyles.body2),
+            const Text('운영하지 않습니다.', style: AppTextStyles.body2),
           ],
         ),
       );

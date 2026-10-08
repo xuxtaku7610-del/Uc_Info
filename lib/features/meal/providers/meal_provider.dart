@@ -54,11 +54,15 @@ class MealNotifier extends StateNotifier<MealState> {
       return;
     }
 
-    state = state.copyWith(requestedDate: normalizedDate, isLoading: true, errorMessage: null);
+    // 이전 날짜의 식단이 남아 보이지 않도록 meal을 비운 새 상태로 시작한다
+    state = MealState(requestedDate: normalizedDate, isLoading: true);
     try {
       final meal = await _repository.getMealByDate(normalizedDate);
+      // 응답 대기 중 다른 날짜로 바뀌었다면 늦게 온 응답은 버린다
+      if (!_isSameDay(state.requestedDate, normalizedDate)) return;
       state = state.copyWith(meal: meal, isLoading: false);
     } catch (e) {
+      if (!_isSameDay(state.requestedDate, normalizedDate)) return;
       state = state.copyWith(
         isLoading: false,
         errorMessage: '식단 정보를 불러오지 못했습니다.',
