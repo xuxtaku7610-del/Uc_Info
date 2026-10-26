@@ -39,8 +39,13 @@ class _ChatSheetState extends ConsumerState<ChatSheet> {
   Widget build(BuildContext context) {
     final isStreaming = ref.watch(chatProvider.select((s) => s.isStreaming));
 
-    return SizedBox(
+    // 공통 시트 배경(Material3 기본 틴트) 위에 흰 배경을 깔아 말풍선·입력창이 구분되게 한다
+    return Container(
       height: MediaQuery.sizeOf(context).height * 0.88,
+      decoration: BoxDecoration(
+        color: context.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusLg)),
+      ),
       child: Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
         child: Column(
