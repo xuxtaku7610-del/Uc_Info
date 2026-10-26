@@ -19,6 +19,8 @@ import '../../data/repositories/course_repository.dart';
 import '../../data/repositories/api_course_repository.dart';
 import '../../data/repositories/enrollment_repository.dart';
 import '../../data/repositories/api_enrollment_repository.dart';
+import '../../data/repositories/chat_repository.dart';
+import '../../data/repositories/api_chat_repository.dart';
 
 // 1. ApiClient Provider
 final apiClientProvider = Provider<ApiClient>((ref) => ApiClient(ref));
@@ -75,4 +77,10 @@ final courseRepositoryProvider = Provider<CourseRepository>((ref) {
 final enrollmentRepositoryProvider = Provider<EnrollmentRepository>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return ApiEnrollmentRepository(apiClient);
+});
+
+// 11. Chat Repository Provider (공지 AI 챗봇)
+final chatRepositoryProvider = Provider<ChatRepository>((ref) {
+  final apiClient = ref.watch(apiClientProvider);
+  return ApiChatRepository(apiClient);
 });
