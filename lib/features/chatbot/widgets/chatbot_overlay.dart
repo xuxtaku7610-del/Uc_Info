@@ -30,37 +30,47 @@ class _ChatbotOverlayState extends ConsumerState<ChatbotOverlay> {
   static const double _liftOffset = 72;
 
   late final GoRouter _router;
+  late final ValueNotifier<int> _popupCount;
   String _path = '';
+  bool _popupOpen = false;
 
   @override
   void initState() {
     super.initState();
     _router = ref.read(routerProvider);
+    _popupCount = ref.read(popupRouteObserverProvider).openCount;
     _router.routerDelegate.addListener(_onRouteChanged);
+    _popupCount.addListener(_onRouteChanged);
     _onRouteChanged();
   }
 
   @override
   void dispose() {
     _router.routerDelegate.removeListener(_onRouteChanged);
+    _popupCount.removeListener(_onRouteChanged);
     super.dispose();
   }
 
-  /// 라우터 알림은 빌드 도중에도 올 수 있어, 프레임이 끝난 뒤 경로를 반영한다.
+  /// 라우터·팝업 알림은 빌드 도중에도 올 수 있어, 프레임이 끝난 뒤 상태를 반영한다.
   /// (빌드 중 setState → Navigator 재부모화 오류 방지)
   void _onRouteChanged() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final path = _router.routerDelegate.currentConfiguration.uri.path;
-      if (path != _path) setState(() => _path = path);
+      final popupOpen = _popupCount.value > 0;
+      if (path != _path || popupOpen != _popupOpen) {
+        setState(() {
+          _path = path;
+          _popupOpen = popupOpen;
+        });
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final isLoggedIn = ref.watch(authSessionProvider).valueOrNull ?? false;
-    final isSheetOpen = ref.watch(chatSheetOpenProvider);
-    final showButton = isLoggedIn && !isSheetOpen && _path != '/auth';
+    final showButton = isLoggedIn && !_popupOpen && _path != '/auth';
     final bottom = MediaQuery.paddingOf(context).bottom +
         AppSpacing.md +
         (_liftedPaths.contains(_path) ? _liftOffset : 0);
@@ -82,18 +92,16 @@ class _ChatbotOverlayState extends ConsumerState<ChatbotOverlay> {
   }
 
   /// builder는 Navigator 바깥이므로 라우터의 Navigator context로 시트를 연다.
-  Future<void> _openSheet() async {
+  /// 시트가 열려 있는 동안 버튼 숨김은 PopupRouteObserver가 처리한다.
+  void _openSheet() {
     final navigatorContext = _router.routerDelegate.navigatorKey.currentContext;
     if (navigatorContext == null) return;
 
-    ref.read(chatSheetOpenProvider.notifier).state = true;
-    await showAppBottomSheet<void>(
+    showAppBottomSheet<void>(
       navigatorContext,
       (_) => const ChatSheet(),
       isScrollControlled: true,
     );
-    if (!mounted) return;
-    ref.read(chatSheetOpenProvider.notifier).state = false;
   }
 }
 
