@@ -215,62 +215,6 @@ lib/
 
 <br>
 
-## 🎨 디자인 토큰
-
-| 용도 | 색상 | 코드 |
-|---|---|---|
-| Primary (브랜드) | 파란색 | `#2F5BE8` |
-| Accent (강조) | 노란색 | `#FFC72C` |
-| Background | 연회색 | `#F4F6FA` |
-| Error | 빨간색 | `#E84040` |
-
-<br>
-
-## 🚀 시작하기
-
-### 사전 요구사항
-
-- Flutter SDK ([공식 가이드](https://docs.flutter.dev/get-started/install))
-- Dart SDK ^3.11.0 이상
-
-### 설치 및 실행
-
-```bash
-git clone https://github.com/xuxtaku7610-del/Uc_Info.git
-cd Uc_Info
-flutter pub get
-flutter run
-```
-
-### 빌드
-
-```bash
-# Android App Bundle (Google Play)
-flutter build appbundle --release
-
-# iOS (macOS 필요)
-flutter build ios --release
-```
-
-<br>
-
-## 📌 개발 현황
-
-- [x] 학번 인증 (보안 저장소, 자동 로그아웃)
-- [x] 홈 대시보드 · 배너 · Pull-to-Refresh
-- [x] 주간 시간표 · 수강신청
-- [x] 식단표 날짜별 조회
-- [x] 공지사항 목록 · 상세 (HTML 렌더링)
-- [x] 알림함
-- [x] 설정 (다크 모드, 알림)
-- [x] 학점 시뮬레이터 · 장학금 · 학사 일정
-- [x] 공지 AI 챗봇
-- [x] Google Play 비공개 테스트 배포 준비
-- [ ] 공지사항 한→영 번역
-- [ ] 캠퍼스 맵 고도화
-
-<br>
-
 ## 📄 라이선스
 
 본 프로젝트는 울산과학대학교 내부 프로젝트로, 외부 배포를 제한합니다.
