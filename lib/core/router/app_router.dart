@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:university_portal_flutter/features/auth/providers/auth_session_provider.dart';
 import 'package:university_portal_flutter/features/auth/screens/auth_screen.dart';
+import 'package:university_portal_flutter/features/chatbot/providers/chat_provider.dart';
 import 'package:university_portal_flutter/features/grade_simulator/screens/grade_simulator_screen.dart';
 import 'package:university_portal_flutter/features/home/screens/home_screen.dart';
 import 'package:university_portal_flutter/features/mypage/screens/mypage_screen.dart';
@@ -35,6 +36,8 @@ final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/auth',
     refreshListenable: notifier,
+    // 바텀시트·다이얼로그가 열리면 챗봇 플로팅 버튼을 숨기기 위해 팝업을 감시한다
+    observers: [ref.read(popupRouteObserverProvider)],
     errorBuilder: (context, state) => const _InvalidRouteScreen(
       message: '페이지를 찾을 수 없습니다.',
     ),

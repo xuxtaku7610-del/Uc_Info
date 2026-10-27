@@ -1,6 +1,7 @@
 // lib/features/chatbot/providers/chat_provider.dart
 // 역할: 공지 AI 챗봇 대화 상태(메시지·세션·스트리밍)와 대화 목록 provider.
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/models/chat_models.dart';
 import '../../../data/repositories/chat_repository.dart';
@@ -114,5 +115,30 @@ final chatSessionsProvider = FutureProvider.autoDispose<List<ChatSession>>((ref)
   return ref.watch(chatRepositoryProvider).getSessions();
 });
 
-/// 챗봇 시트가 열려 있는지 (열려 있으면 플로팅 버튼을 숨긴다)
-final chatSheetOpenProvider = StateProvider<bool>((ref) => false);
+/// 루트 Navigator 위에 떠 있는 팝업(바텀시트·다이얼로그) 수를 센다.
+/// 팝업이 하나라도 열려 있으면 플로팅 버튼이 그 위를 가리지 않도록 숨긴다. (챗봇 시트 포함)
+class PopupRouteObserver extends NavigatorObserver {
+  final openCount = ValueNotifier<int>(0);
+
+  void _count(Route<dynamic>? route, int delta) {
+    if (route is PopupRoute) openCount.value += delta;
+  }
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) => _count(route, 1);
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) => _count(route, -1);
+
+  @override
+  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) => _count(route, -1);
+
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    _count(oldRoute, -1);
+    _count(newRoute, 1);
+  }
+}
+
+/// GoRouter observers에 등록되는 팝업 감시자
+final popupRouteObserverProvider = Provider<PopupRouteObserver>((ref) => PopupRouteObserver());
