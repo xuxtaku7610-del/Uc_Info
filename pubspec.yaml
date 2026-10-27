@@ -38,6 +38,7 @@ dependencies:
   dio: ^5.4.0 # REST API 통신용
   flutter_riverpod: ^2.6.1 # 앱 전역의 상태 관리
   intl: ^0.19.0
+  flutter_widget_from_html_core: ^0.17.4
 
 
 dev_dependencies:

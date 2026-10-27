@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'features/chatbot/widgets/chatbot_overlay.dart';
 import 'features/settings/providers/settings_provider.dart';
 
 class UniversityPortalApp extends ConsumerWidget {
@@ -30,7 +31,8 @@ class UniversityPortalApp extends ConsumerWidget {
         );
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(textScaler: clampedScaler),
-          child: child!,
+          // 로그인 후 모든 화면 우측 하단에 공지 AI 챗봇 버튼을 겹쳐 띄운다
+          child: ChatbotOverlay(child: child!),
         );
       },
     );
